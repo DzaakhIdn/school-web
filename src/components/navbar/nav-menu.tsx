@@ -16,9 +16,12 @@ interface NavMenuProps {
 }
 
 const menuItems = [
-  { title: "Beranda", href: "/" },
+  { title: "Beranda", href: "/home" },
   { title: "Tentang", href: "/about" },
   { title: "Program", href: "/programs" },
+  { title: "Galeri", href: "/gallery" },
+  { title: "Blog", href: "/blog" },
+  { title: "Kontak", href: "/contact" },
 ];
 
 export const NavMenu = ({

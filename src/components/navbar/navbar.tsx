@@ -8,7 +8,7 @@ import { useState } from "react";
 const navItems = [
   {
     items: [
-      { title: "Beranda", href: "/" },
+      { title: "Beranda", href: "/home" },
       { title: "Tentang", href: "/about" },
       { title: "Galeri", href: "/gallery" },
     ],
@@ -44,7 +44,9 @@ const Navbar = () => {
           <Navigation menuItems={navItems} index={0} align="start" />
         </div>
         
-        <div className="flex-shrink-0 mx-8">
+        <div className="flex-shrink-0 mx-8" onClick={() => {
+            window.location.href = "/";
+          }}>
           <Image
             src={"/important/logo.png"}
             alt="logo"

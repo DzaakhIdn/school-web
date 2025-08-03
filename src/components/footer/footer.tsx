@@ -40,7 +40,7 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <div className={`min-h-screen flex flex-col ${montserrat.className}`}>
+    <div className={`mt-20 border-t-2 border-slate-200 flex flex-col ${montserrat.className}`}>
       <div className="grow shadow" />
       <footer>
         <div className="max-w-screen-xl mx-auto">
