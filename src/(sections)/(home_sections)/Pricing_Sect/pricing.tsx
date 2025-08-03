@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { Space_Grotesk, Montserrat, Raleway } from "next/font/google";
+import { Space_Grotesk, Montserrat, Raleway, Poppins } from "next/font/google";
 import ScrollReveal from "@/animate/ScrollReveal";
-import Image from "next/image";
 import { CircleCheck } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion } from "motion/react";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -25,6 +26,11 @@ const benefits_beasiswa = [
   "Program tahfidz intensif dengan metode terbaru",
 ];
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "700", "600", "900"],
+});
+
 const benefits_reguler = [
   "Bebas biaya pendidikan selama 3 tahun",
   "Fasilitas asrama dan makan gratis",
@@ -32,6 +38,11 @@ const benefits_reguler = [
 ];
 
 export default function Pricing() {
+  const [position, setPosition] = useState({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
   return (
     <>
       <div className="lg:mt-32 md:mt-16 flex items-center justify-center flex-col transition-all duration-300">
@@ -65,12 +76,15 @@ export default function Pricing() {
               </p>
             </div>
           </div>
-          <div className="pricing">
-            <div className="pircing-nav relative mx-auto bg-white rounded-md border-2 gap-3 border-blue-500 flex p-2 w-1/2">
-              <div className="beasiswa relative uppercase">Beasiswa</div>
-              <div className="reguler">Reguler</div>
+          <div className="pricing space-y-2">
+            <div
+              className={`pricing-nav relative mx-auto bg-white rounded-md border-2 gap-3 border-blue-500 flex p-2 w-auto md:w-1/3 lg:w-1/4 ${poppins.className} font-semibold`}
+            >
+              <Tab setPosition={setPosition}>Beasiswa</Tab>
+              <Tab setPosition={setPosition}>Reguler</Tab>
+              <Cursor position={position} />
             </div>
-            <div className="pircing-container w-full border-2 border-blue-500 shadow-[5px_5px_0px_0px_oklch(62.3%_0.214_259.815)] rounded-md p-5 overflow-hidden">
+            <div className="pricing-container w-full border-2 border-blue-500 shadow-[5px_5px_0px_0px_oklch(62.3%_0.214_259.815)] rounded-md p-5 overflow-hidden">
               <PircingCard
                 title="Program Beasiswa"
                 btn_title="Info Lengkap Beasiswa"
@@ -85,6 +99,42 @@ export default function Pricing() {
     </>
   );
 }
+
+const Cursor = ({ position }: { position: any }) => {
+  return (
+    <motion.div
+      className="absolute left-0 h-8 rounded-md bg-blue-500 z-0"
+      animate={position}
+    ></motion.div>
+  );
+};
+const Tab = ({
+  children,
+  setPosition,
+}: {
+  children: React.ReactNode;
+  setPosition: any;
+}) => {
+  const Reff = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      className="relative uppercase flex-1 justify-center items-center text-center block cursor-pointer z-10"
+      ref={Reff}
+      onMouseEnter={() => {
+        if (!Reff.current) return;
+        const {width} = Reff.current.getBoundingClientRect();
+        setPosition({
+          left: 0,
+          width: width,
+          opacity: 1,
+        })
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 function PircingCard({
   title,
