@@ -86,7 +86,7 @@ export default function VisiSect(): JSX.Element {
                       montserrat.className
                     } font-semibold px-20 py-5 hover:cursor-pointer hover:bg-blue-500 hover:text-white ${
                       activeTab === tab
-                        ? "bg-blue-500 text-white"
+                        ? "bg-blue-500 text-white border border-blue-500"
                         : "bg-transparent border border-slate-700"
                     }`}
                   >

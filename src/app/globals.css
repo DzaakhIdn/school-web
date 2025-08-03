@@ -131,3 +131,54 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+/* Reverse direction */
+.animate-marquee.reverse {
+  animation-direction: reverse;
+}
+
+.animate-marquee-vertical.reverse {
+  animation-direction: reverse;
+}
+
+/* Pause on hover */
+.group:hover .animate-marquee.pause-hover {
+  animation-play-state: paused;
+}
+
+.group:hover .animate-marquee-vertical.pause-hover {
+  animation-play-state: paused;
+}
+
+/* Alternative hover pause using group-hover */
+.group-hover\:pause {
+  animation-play-state: paused;
+}
+
+
+

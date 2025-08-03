@@ -49,7 +49,6 @@ export default function Gallery() {
             </div>
           </div>
         </div>
-        {/* Gallery container dengan spacing yang tepat */}
         <ScrollableContent />
       </div>
     </>
