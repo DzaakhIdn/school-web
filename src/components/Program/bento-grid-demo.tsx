@@ -10,10 +10,11 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-
 export function BentoGridDemo() {
   return (
-    <BentoGrid className={`max-w-6xl mx-auto md:auto-rows-[20rem] ${montserrat.className}`}>
+    <BentoGrid
+      className={`max-w-6xl mx-auto md:auto-rows-[20rem] ${montserrat.className}`}
+    >
       {items.map((item, i) => (
         <BentoGridItem
           key={i}
@@ -36,7 +37,7 @@ const items = [
     title: "Digital Literacy & Programming",
     description: "Belajar coding, desain grafis, dan pemrograman",
     className: "md:col-span-2",
-    image: "/assets/programs_card/code.jpg",
+    image: "/assets/programs_card/code.webp",
     imageAlt: "The Dawn of Innovation",
     icon: <LuCodeXml className="h-4 w-4" />,
   },
@@ -44,14 +45,14 @@ const items = [
     title: "Tahfidz Intensif",
     description: "Target hafalan Al Qur'an dalam 3 tahun",
     className: "md:col-span-1",
-    image: "/assets/programs_card/quran.jpg",
+    image: "/assets/programs_card/quran.webp",
     imageAlt: "The Dawn of Innovation",
     icon: <FaBookQuran className="h-4 w-4" />,
   },
   {
     title: "Bahasa Inggris & Arab",
     description: "Belajar bahasa Inggris dengan metode yang menyenangkan",
-    image: "/assets/programs_card/bahasa.jpg",
+    image: "/assets/programs_card/bahasa.webp",
     imageAlt: "The Dawn of Innovation",
     className: "md:col-span-1",
     icon: <FaBookAtlas className="h-4 w-4" />,
@@ -59,10 +60,9 @@ const items = [
   {
     title: "Diniyah",
     description: "Belajar ilmu diniyyah sesuai tuntunan Rasulullah",
-    image: "/assets/programs_card/kitab.jpg",
+    image: "/assets/programs_card/kitab.webp",
     imageAlt: "The Dawn of Innovation",
     className: "md:col-span-2",
     icon: <FaPenNib className="h-4 w-4" />,
   },
 ];
-
