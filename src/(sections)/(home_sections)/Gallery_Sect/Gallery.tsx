@@ -71,32 +71,32 @@ function ScrollableContent() {
 
   const data = [
     {
-      img: "img-1.webp",
+      img: "img-1.jpg",
       title: "Kegiatan Lomba Agustusan",
       desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School.",
     },
     {
-      img: "img-2.webp",
+      img: "img-2.jpg",
       title: "Kegiatan Lomba Agustusan",
       desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School.",
     },
     {
-      img: "img-3.webp",
+      img: "img-3.jpg",
       title: "Kegiatan Outbond",
       desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School.",
     },
     {
-      img: "img-4.webp",
+      img: "img-4.jpg",
       title: "Kegiatan Outbond",
       desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School.",
     },
     {
-      img: "img-5.webp",
+      img: "img-5.jpg",
       title: "Kegiatan Sosial",
       desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School.",
     },
     {
-      img: "img-8.webp",
+      img: "img-8.jpg",
       title: "Kegiatan Sosial",
       desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School.",
     },
