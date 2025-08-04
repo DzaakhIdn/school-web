@@ -79,40 +79,49 @@ export default function Pricing() {
       <div className="absolute inset-0">
         <GridBackground />
       </div>
-      
+
       {/* Content */}
       <div className="relative z-10 pt-20 md:pt-24 lg:pt-32 pb-16 md:pb-20 lg:pb-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           {/* Header Section */}
           <div className="text-center mb-12 md:mb-16 lg:mb-20">
-            <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4`}>
+            <div
+              className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4`}
+            >
               <p>{`< Info Pendaftaran />`}</p>
             </div>
-            <div className={`${montserrat.className} font-extrabold tracking-tight text-blue-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6`}>
+            <div
+              className={`${montserrat.className} font-extrabold tracking-tight text-blue-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6`}
+            >
               <ScrollReveal
                 baseOpacity={0}
                 enableBlur={true}
-                baseRotation={0}
-                blurStrength={10}
+                baseRotation={5}
+                blurStrength={15}
               >
                 Pintu Menuju HSI Telah Dibuka
               </ScrollReveal>
             </div>
             <div className="max-w-4xl mx-auto">
-              <p className={`${montserrat.className} text-slate-700 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed`}>
+              <p
+                className={`${montserrat.className} text-slate-700 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed`}
+              >
                 Kami membuka jalur Beasiswa & Reguler untuk tahun ajaran baru.
-                Jangan lewatkan kesempatan membentuk masa depan anak Anda di tempat terbaik.
+                Jangan lewatkan kesempatan membentuk masa depan anak Anda di
+                tempat terbaik.
               </p>
             </div>
           </div>
 
           {/* Tab Navigation */}
           <div className="mb-8 md:mb-12">
-            <div className={`pricing-nav relative mx-auto bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-500 flex p-2 sm:p-3 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl ${poppins.className} font-semibold shadow-lg`}>
+            <div
+              className={`pricing-nav relative mx-auto bg-white/90 backdrop-blur-sm rounded-xl border-2 border-blue-500 flex p-2 sm:p-3 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl ${poppins.className} font-semibold shadow-lg`}
+            >
               {(["beasiswa", "reguler"] as TabKey[]).map((tab) => (
-                <Tab 
-                  key={tab} 
-                  setPosition={setPosition} 
+                <Tab
+                  key={tab}
+                  setPosition={setPosition}
                   onClick={() => setIsBeasiswa(tab)}
                   isActive={isBeasiswa === tab}
                 >
@@ -139,6 +148,7 @@ export default function Pricing() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Cursor = ({ position }: { position: any }) => {
   return (
     <motion.div
@@ -164,6 +174,7 @@ const Tab = ({
   isActive,
 }: {
   children: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPosition: any;
   onClick: () => void;
   isActive: boolean;
@@ -184,7 +195,7 @@ const Tab = ({
   return (
     <div
       className={`relative uppercase flex-1 flex justify-center items-center text-xs sm:text-sm md:text-base lg:text-lg font-medium cursor-pointer z-10 py-2 sm:py-3 px-3 sm:px-4 md:px-6 rounded-lg transition-all duration-300 hover:scale-[1.02] ${
-        isActive ? 'text-white' : 'text-slate-600 hover:text-white'
+        isActive ? "text-white" : "text-slate-600 hover:text-white"
       }`}
       ref={Reff}
       onMouseEnter={() => {
@@ -198,7 +209,9 @@ const Tab = ({
       }}
       onClick={onClick}
     >
-      <span className="relative z-10 select-none whitespace-nowrap">{children}</span>
+      <span className="relative z-10 select-none whitespace-nowrap">
+        {children}
+      </span>
     </div>
   );
 };
@@ -234,10 +247,14 @@ function PricingCard({
 
           {/* Header */}
           <div className="pricing-header">
-            <h3 className={`${raleway.className} text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-3 sm:mb-4`}>
+            <h3
+              className={`${raleway.className} text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-3 sm:mb-4`}
+            >
               {title}
             </h3>
-            <p className={`${montserrat.className} text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed`}>
+            <p
+              className={`${montserrat.className} text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed`}
+            >
               {desc}
             </p>
           </div>
@@ -250,7 +267,9 @@ function PricingCard({
                   className="text-yellow-500 mt-0.5 flex-shrink-0"
                   size={16}
                 />
-                <span className={`${montserrat.className} text-xs sm:text-sm md:text-base text-slate-700`}>
+                <span
+                  className={`${montserrat.className} text-xs sm:text-sm md:text-base text-slate-700`}
+                >
                   {feature}
                 </span>
               </div>
@@ -276,10 +295,14 @@ function PricingCard({
           {/* Content Section */}
           <div className="flex-1 space-y-6">
             <div className="pricing-header">
-              <h3 className={`${raleway.className} text-3xl xl:text-4xl font-bold text-slate-800 mb-4`}>
+              <h3
+                className={`${raleway.className} text-3xl xl:text-4xl font-bold text-slate-800 mb-4`}
+              >
                 {title}
               </h3>
-              <p className={`${montserrat.className} text-slate-600 text-lg xl:text-xl leading-relaxed`}>
+              <p
+                className={`${montserrat.className} text-slate-600 text-lg xl:text-xl leading-relaxed`}
+              >
                 {desc}
               </p>
             </div>
@@ -290,7 +313,9 @@ function PricingCard({
                     className="text-yellow-500 mt-1 flex-shrink-0"
                     size={20}
                   />
-                  <span className={`${montserrat.className} text-slate-700 text-base xl:text-lg leading-relaxed`}>
+                  <span
+                    className={`${montserrat.className} text-slate-700 text-base xl:text-lg leading-relaxed`}
+                  >
                     {feature}
                   </span>
                 </div>
@@ -302,7 +327,9 @@ function PricingCard({
 
       {/* CTA Button */}
       <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-8 border-t border-slate-200">
-        <button className={`${montserrat.className} w-full sm:w-auto sm:min-w-[200px] mx-auto block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 md:px-10 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm sm:text-base md:text-lg`}>
+        <button
+          className={`${montserrat.className} w-full sm:w-auto sm:min-w-[200px] mx-auto block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 md:px-10 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm sm:text-base md:text-lg`}
+        >
           {btn_title}
         </button>
       </div>

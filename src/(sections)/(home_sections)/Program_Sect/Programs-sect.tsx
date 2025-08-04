@@ -28,15 +28,15 @@ export default function Page() {
             <ScrollReveal
               baseOpacity={0}
               enableBlur={true}
-              baseRotation={0}
-              blurStrength={10}
+              baseRotation={5}
+              blurStrength={15}
             >
               Empat pilar utama yang menjadi fondasi pendidikan di HSI
             </ScrollReveal>
           </div>
-        <div className="mt-10">
-          <BentoGridDemo />
-        </div>
+          <div className="mt-10 w-full max-w-6xl mx-auto">
+            <BentoGridDemo />
+          </div>
         </div>
       </div>
     </>

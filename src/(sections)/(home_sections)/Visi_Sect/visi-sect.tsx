@@ -69,8 +69,8 @@ export default function VisiSect(): JSX.Element {
             <ScrollReveal
               baseOpacity={0}
               enableBlur={true}
-              baseRotation={0}
-              blurStrength={10}
+              baseRotation={5}
+              blurStrength={15}
             >
               Kami Tidak Mencetak Lulusan Biasa, Tapi Pemimpin yang Beradab
             </ScrollReveal>

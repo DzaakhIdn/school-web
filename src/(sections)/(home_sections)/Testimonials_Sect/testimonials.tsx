@@ -70,15 +70,19 @@ const Testimonials = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
       <div className="text-center mb-16 lg:mb-20">
-        <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl mb-4`}>
+        <div
+          className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl mb-4`}
+        >
           <p>{`< Testimoni Santri & Wali />`}</p>
         </div>
-        <div className={`${montserrat.className} font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl lg:text-4xl`}>
+        <div
+          className={`${montserrat.className} font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl lg:text-4xl`}
+        >
           <ScrollReveal
             baseOpacity={0}
             enableBlur={true}
-            baseRotation={0}
-            blurStrength={10}
+            baseRotation={5}
+            blurStrength={15}
           >
             Cerita Inspiratif dari Keluarga Besar HSI
           </ScrollReveal>
@@ -89,7 +93,7 @@ const Testimonials = () => (
       <div className="relative">
         <div className="absolute left-0 inset-y-0 w-[10%] bg-gradient-to-r from-background to-transparent z-10" />
         <div className="absolute right-0 inset-y-0 w-[10%] bg-gradient-to-l from-background to-transparent z-10" />
-        
+
         <Marquee pauseOnHover className="[--duration:25s] mb-6">
           <TestimonialList />
         </Marquee>
@@ -110,14 +114,21 @@ const TestimonialList = () =>
       <div className="flex items-center gap-4 mb-4">
         <Avatar className="w-12 h-12">
           <AvatarFallback className="bg-blue-500 text-white font-semibold text-lg">
-            {testimonial.name.split(' ').map(n => n[0]).join('')}
+            {testimonial.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}>
+          <p
+            className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}
+          >
             {testimonial.name}
           </p>
-          <p className={`${montserrat.className} text-sm text-slate-600 dark:text-slate-400`}>
+          <p
+            className={`${montserrat.className} text-sm text-slate-600 dark:text-slate-400`}
+          >
             {testimonial.role} • {testimonial.year}
           </p>
         </div>
@@ -125,11 +136,17 @@ const TestimonialList = () =>
 
       {/* Quote */}
       <div className="relative">
-        <div className="absolute -top-2 -left-1 text-4xl text-yellow-500/30 font-serif">&quot;</div>
-        <p className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed pl-4`}>
+        <div className="absolute -top-2 -left-1 text-4xl text-yellow-500/30 font-serif">
+          &quot;
+        </div>
+        <p
+          className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed pl-4`}
+        >
           {testimonial.testimonial}
         </p>
-        <div className="absolute -bottom-4 -right-1 text-4xl text-yellow-500/30 font-serif rotate-180">&quot;</div>
+        <div className="absolute -bottom-4 -right-1 text-4xl text-yellow-500/30 font-serif rotate-180">
+          &quot;
+        </div>
       </div>
     </div>
   ));

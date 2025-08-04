@@ -26,7 +26,7 @@ export default function Stats() {
             className={`${montserrat.className} text-center font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl`}
           >
             <ScrollReveal
-              baseOpacity={0}
+             baseOpacity={0}
               enableBlur={true}
               baseRotation={5}
               blurStrength={15}

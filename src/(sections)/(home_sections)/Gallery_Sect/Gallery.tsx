@@ -31,8 +31,8 @@ export default function Gallery() {
               <ScrollReveal
                 baseOpacity={0}
                 enableBlur={true}
-                baseRotation={0}
-                blurStrength={10}
+                baseRotation={5}
+                blurStrength={15}
               >
                 Keseruan Santri di HSI Boarding School
               </ScrollReveal>
@@ -70,22 +70,19 @@ function ScrollableContent() {
   const xReverse = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
 
   const data = [
-    { img: "img-thumb-1.jpg", title: "Kegiatan Olahraga" },
-    { img: "img-thumb-2.jpg", title: "Kegiatan Seni" },
-    { img: "img-thumb-1.jpg", title: "Kegiatan Akademik" },
-    { img: "img-thumb-2.jpg", title: "Kegiatan Rohani" },
-    { img: "img-thumb-1.jpg", title: "Kegiatan Sosial" },
-    { img: "img-thumb-2.jpg", title: "Kegiatan Ekstrakurikuler" },
+    { img: "img-1.jpg", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-2.jpg", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-3.jpg", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-4.jpg", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-5.jpg", title: "Kegiatan Sosial", desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-8.jpg", title: "Kegiatan Sosial", desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School." },
   ];
 
   return (
     <div ref={containerRef} className="w-full h-[250vh] relative">
       <div className="sticky top-0 h-screen flex items-center justify-center bg-white">
         <div className="relative w-full px-4 py-5 sm:px-6 lg:px-8 overflow-hidden">
-          <motion.div
-            style={{ x }}
-            className="flex gap-6 min-w-max pb-6"
-          >
+          <motion.div style={{ x }} className="flex gap-6 min-w-max pb-6">
             {data.map((item, idx) => (
               <div
                 key={`baris1-${idx}`}
@@ -93,10 +90,10 @@ function ScrollableContent() {
               >
                 <div className="w-full h-full rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105">
                   <ModalDialogImage
-                    image_triger={`/assets/thumbnail/${item.img}`}
-                    image={`/assets/thumbnail/${item.img}`}
+                    image_triger={`/assets/gallery/${item.img}`}
+                    image={`/assets/gallery/${item.img}`}
                     title={item.title}
-                    description={`Deskripsi lengkap tentang ${item.title} yang dilakukan oleh para santri HSI Boarding School`}
+                    description={item.desc}
                   />
                 </div>
               </div>
@@ -114,8 +111,8 @@ function ScrollableContent() {
               >
                 <div className="w-full h-full rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105">
                   <ModalDialogImage
-                    image_triger={`/assets/thumbnail/${item.img}`}
-                    image={`/assets/thumbnail/${item.img}`}
+                    image_triger={`/assets/gallery/${item.img}`}
+                    image={`/assets/gallery/${item.img}`}
                     title={item.title}
                     description={`Deskripsi lengkap tentang ${item.title} yang dilakukan oleh para santri HSI Boarding School`}
                   />
@@ -128,4 +125,3 @@ function ScrollableContent() {
     </div>
   );
 }
-
