@@ -28,6 +28,7 @@ export const NavMenu = ({
   orientation = "horizontal",
   className = "",
 }: NavMenuProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const menuRef = useRef<HTMLElement>(null);
 

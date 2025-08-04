@@ -65,15 +65,17 @@ function ScrollableContent() {
     offset: ["start end", "end start"],
   });
 
+  
+
   // Baris 1: ke kiri, Baris 2: ke kanan
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const xReverse = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
 
   const data = [
-    { img: "img-1.jpg", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
-    { img: "img-2.jpg", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
-    { img: "img-3.jpg", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
-    { img: "img-4.jpg", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-1.JPG", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-2.JPG", title: "Kegiatan Lomba Agustusan", desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-3.JPG", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
+    { img: "img-4.JPG", title: "Kegiatan Outbond", desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School." },
     { img: "img-5.jpg", title: "Kegiatan Sosial", desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School." },
     { img: "img-8.jpg", title: "Kegiatan Sosial", desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School." },
   ];

@@ -1,7 +1,7 @@
 import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight, CirclePlay } from "lucide-react";
+import { CirclePlay } from "lucide-react";
 import { Montserrat, Space_Grotesk } from "next/font/google";
 import BlurText from "@/animate/BlurText";
 
