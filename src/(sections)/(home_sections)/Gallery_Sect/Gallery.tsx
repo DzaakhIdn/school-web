@@ -17,9 +17,9 @@ const montserrat = Montserrat({
 export default function Gallery() {
   return (
     <>
-      <div className="lg:mt-32 md:mt-16 flex items-center justify-center flex-col transition-all duration-300">
-        <div className="my-8 lg:my-0 lg:mb-8 flex flex-col justify-center px-6 items-center gap-4 md:gap-3 max-w-6xl w-full mx-auto">
-          <div className="text-container flex flex-col justify-center items-center space-y-4">
+      <div className="lg:mt-32 md:mt-16 flex items-center justify-center flex-col transition-all duration-300 mb-20">
+        <div className="my-8 lg:my-0 lg:mb-8 flex flex-col justify-center px-6 items-center gap-4 md:gap-3 max-w-6xl w-full mx-auto mb-20">
+          <div className="text-container flex flex-col justify-center items-center space-y-4 mb-20">
             <div
               className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl`}
             >
@@ -49,7 +49,7 @@ export default function Gallery() {
             </div>
           </div>
         </div>
-        <ScrollableContent />
+          <ScrollableContent />
       </div>
     </>
   );
@@ -59,13 +59,15 @@ export default function Gallery() {
 
 function ScrollableContent() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // Baris 1: ke kiri, Baris 2: ke kanan
+  // Auto scroll animations
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const xReverse = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
 
@@ -106,13 +108,22 @@ function ScrollableContent() {
     <div ref={containerRef} className="w-full h-[250vh] relative">
       <div className="sticky top-0 h-screen flex items-center justify-center bg-white">
         <div className="relative w-full px-4 py-5 sm:px-6 lg:px-8 overflow-hidden">
-          <motion.div style={{ x }} className="flex gap-6 min-w-max pb-6">
+          {/* Row 1 - Auto scroll + Manual scroll */}
+          <motion.div 
+            ref={row1Ref}
+            style={{ x }} 
+            className="flex gap-4 min-w-max pb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+            drag="x"
+            dragConstraints={{ left: -1500, right: 0 }}
+            dragElastic={0.1}
+            whileDrag={{ scale: 0.98 }}
+          >
             {data.map((item, idx) => (
               <div
                 key={`baris1-${idx}`}
-                className="flex-shrink-0 w-48 h-72 sm:w-56 sm:h-80 md:w-64 md:h-88 lg:w-72 lg:h-96 xl:w-80 xl:h-[26rem] 2xl:w-84 2xl:h-[28rem]"
+                className="flex-shrink-0 w-72 h-96 sm:w-80 sm:h-[26rem] md:w-[22rem] md:h-[30rem] lg:w-[24rem] lg:h-[32rem] xl:w-[26rem] xl:h-[34rem]"
               >
-                <div className="w-full h-full rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105">
+                <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl">
                   <ModalDialogImage
                     image_triger={`/assets/gallery/${item.img}`}
                     image={`/assets/gallery/${item.img}`}
@@ -124,26 +135,42 @@ function ScrollableContent() {
             ))}
           </motion.div>
 
+          {/* Row 2 - Auto scroll + Manual scroll */}
           <motion.div
+            ref={row2Ref}
             style={{ x: xReverse }}
-            className="flex gap-6 min-w-max pt-6"
+            className="flex gap-4 min-w-max pt-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+            drag="x"
+            dragConstraints={{ left: -1500, right: 0 }}
+            dragElastic={0.1}
+            whileDrag={{ scale: 0.98 }}
           >
             {data.map((item, idx) => (
               <div
                 key={`baris2-${idx}`}
-                className="flex-shrink-0 w-48 h-72 sm:w-56 sm:h-80 md:w-64 md:h-88 lg:w-72 lg:h-96 xl:w-80 xl:h-[26rem] 2xl:w-84 2xl:h-[28rem]"
+                className="flex-shrink-0 w-72 h-96 sm:w-80 sm:h-[26rem] md:w-[22rem] md:h-[30rem] lg:w-[24rem] lg:h-[32rem] xl:w-[26rem] xl:h-[34rem]"
               >
-                <div className="w-full h-full rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105">
+                <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl">
                   <ModalDialogImage
                     image_triger={`/assets/gallery/${item.img}`}
                     image={`/assets/gallery/${item.img}`}
                     title={item.title}
-                    description={`Deskripsi lengkap tentang ${item.title} yang dilakukan oleh para santri HSI Boarding School`}
+                    description={item.desc}
                   />
                 </div>
               </div>
             ))}
           </motion.div>
+
+          {/* Mobile scroll indicators */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 md:hidden">
+            <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1">
+              <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+              <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+              <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+              <span className="text-xs text-white/80 ml-1">Swipe</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
