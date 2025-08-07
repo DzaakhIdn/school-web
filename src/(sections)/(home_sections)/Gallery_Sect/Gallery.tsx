@@ -1,7 +1,7 @@
 import { Space_Grotesk, Montserrat } from "next/font/google";
 import ScrollReveal from "@/animate/ScrollReveal";
 import { ModalDialogImage } from "@/components/alert/modal_dialog";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 
 const spaceGrotesk = Space_Grotesk({
@@ -49,7 +49,7 @@ export default function Gallery() {
             </div>
           </div>
         </div>
-          <ScrollableContent />
+        <ScrollableContent />
       </div>
     </>
   );
@@ -61,15 +61,28 @@ function ScrollableContent() {
   const containerRef = useRef<HTMLDivElement>(null);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // Auto scroll animations
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const xReverse = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Auto scroll animations with responsive values
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "60%" : "40%"]);
+  const xReverse = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-80%" : "-60%"]);
 
   const data = [
     {
@@ -109,9 +122,9 @@ function ScrollableContent() {
       <div className="sticky top-0 h-screen flex items-center justify-center bg-white">
         <div className="relative w-full px-4 py-5 sm:px-6 lg:px-8 overflow-hidden">
           {/* Row 1 - Auto scroll + Manual scroll */}
-          <motion.div 
+          <motion.div
             ref={row1Ref}
-            style={{ x }} 
+            style={{ x }}
             className="flex gap-4 min-w-max pb-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
             drag="x"
             dragConstraints={{ left: -1500, right: 0 }}
@@ -163,7 +176,7 @@ function ScrollableContent() {
           </motion.div>
 
           {/* Mobile scroll indicators */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 md:hidden">
+          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 md:hidden">
             <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1">
               <div className="w-1 h-1 bg-white/60 rounded-full"></div>
               <div className="w-1 h-1 bg-white/60 rounded-full"></div>
