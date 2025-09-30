@@ -33,21 +33,16 @@ export function ModalDialogImage({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <div className="group relative w-full h-full rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105">
+        <div className="group relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
           <Image
             src={image_triger}
             alt={title}
             width={300}
             height={300}
-            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover"
           />
           <div className=" absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           {/* Title overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <h3 className={`${montserrat.className} text-white font-semibold text-lg md:text-xl leading-tight`}>
-              {title}
-            </h3>
-          </div>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -71,7 +66,9 @@ export function ModalDialogImage({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="hover:cursor-pointer">close</AlertDialogCancel>
+          <AlertDialogCancel className="hover:cursor-pointer">
+            close
+          </AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -40,7 +40,9 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <div className={`mt-20 border-t-2 border-slate-200 flex flex-col ${montserrat.className}`}>
+    <div
+      className={`mt-20 border-t-2 border-slate-200 flex flex-col md:p-8 ${montserrat.className}`}
+    >
       <div className="grow shadow" />
       <footer>
         <div className="max-w-screen-xl mx-auto">
@@ -71,10 +73,18 @@ const Footer = () => {
 
             {/* Subscribe Newsletter */}
             <div className="max-w-xs w-full">
-              <h6 className="font-semibold text-sm md:text-lg">Stay up to date</h6>
+              <h6 className="font-semibold text-sm md:text-lg">
+                Stay up to date
+              </h6>
               <form className="mt-4 flex items-center gap-2">
-                <Input type="email" placeholder="Enter your email" className="text-sm" />
-                <Button className="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer">Subscribe</Button>
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="text-sm"
+                />
+                <Button className="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer">
+                  Subscribe
+                </Button>
               </form>
             </div>
           </div>

@@ -180,5 +180,12 @@
   animation-play-state: paused;
 }
 
+/* src/app/globals.css */
+:root {
+  --travel-distance: 150px; /* Sesuaikan jarak sesuai kebutuhan */
+}
+
+
+
 
 
