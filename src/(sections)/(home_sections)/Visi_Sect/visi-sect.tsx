@@ -40,14 +40,14 @@ const content: Record<TabKey, TabContent> = {
     title:
       "Membina Generasi Pemimpin yang Beradab, Berilmu, dan Berwawasan Global",
     description:
-      "Membina generasi pemimpin yang beradab, berilmu, dan berwawasan global",
-    img_title: "Belajar Ilmu Al Quran & Hadits",
+      "Membangun generasi penerus bangsa yang beradab, berilmu, dan berwawasan global, siap menjawab tantangan zaman.",
+    img_title: "Pemimpin Qur’ani untuk Peradaban Global",
     img: "/assets/thumbnail/img-thumb-1.jpg",
   },
   misi: {
     title: "Belajar Ilmu Al Quran, Mengamalkan Sunnah, dan Berprestasi",
     description:
-      "Membina generasi pemimpin yang beradab, berilmu, dan berwawasan global",
+      "Menjadikan Al-Qur’an sebagai pedoman, Sunnah sebagai teladan, dan prestasi sebagai wujud pengabdian.",
     img_title: "Belajar Ilmu Al Quran & Hadits",
     img: "/assets/thumbnail/img-thumb-2.jpg",
   },
@@ -83,6 +83,26 @@ export default function VisiSect(): JSX.Element {
           {/* Content */}
           <div className="container-content flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12 mt-10 w-full">
             {/* LEFT SIDE */}
+            <div className="right-side-tab flex justify-center lg:justify-end lg:flex-1 w-full">
+              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] rounded-lg overflow-hidden group">
+                <Image
+                  src={content[activeTab].img}
+                  alt="gambar"
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div className="w-full h-1/2 bg-gradient-to-t from-black to-transparent absolute bottom-0 left-0"></div>
+                <p
+                  className={`${raleway.className} absolute bottom-6 left-6 right-6 text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight`}
+                >
+                  {content[activeTab].img_title}
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT SIDE IMAGE */}
             <div className="left-side-tab flex flex-col gap-6 lg:flex-1 w-full">
               {/* TAB BUTTON */}
               <div className="tab-button flex gap-2 justify-center lg:justify-start">
@@ -90,12 +110,12 @@ export default function VisiSect(): JSX.Element {
                   <Button
                     key={tab}
                     onClick={() => setTabActive(tab)}
-                    className={`text-slate-700 text-sm sm:text-base ${
+                    className={`text-blue-500 text-sm sm:text-base ${
                       montserrat.className
-                    } font-semibold px-10 sm:px-24 py-3 sm:py-6 hover:cursor-pointer hover:bg-blue-500 hover:text-white ${
+                    } font-semibold px-10 sm:px-24 py-3 sm:py-6 hover:cursor-pointer hover:bg-blue-500 hover:text-white duration-200 ease-in-out ${
                       activeTab === tab
                         ? "bg-blue-500 text-white border border-blue-500"
-                        : "bg-transparent border border-slate-700"
+                        : "bg-transparent border border-blue-500"
                     }`}
                   >
                     {tab === "visi" ? "Visi" : "Misi"}
@@ -127,26 +147,6 @@ export default function VisiSect(): JSX.Element {
                   </span>
                   <ArrowRight className="!h-4 !w-4" />
                 </Button>
-              </div>
-            </div>
-
-            {/* RIGHT SIDE IMAGE */}
-            <div className="right-side-tab flex justify-center lg:justify-end lg:flex-1 w-full">
-              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] rounded-lg overflow-hidden group">
-                <Image
-                  src={content[activeTab].img}
-                  alt="gambar"
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="w-full h-1/2 bg-gradient-to-t from-black to-transparent absolute bottom-0 left-0"></div>
-                <p
-                  className={`${raleway.className} absolute bottom-6 left-6 right-6 text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight`}
-                >
-                  {content[activeTab].img_title}
-                </p>
               </div>
             </div>
 
