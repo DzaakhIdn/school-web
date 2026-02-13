@@ -1,167 +1,146 @@
+"use client";
+
 import { Space_Grotesk, Montserrat } from "next/font/google";
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ModalDialogImage } from "@/components/alert/modal_dialog";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["700"] });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "600", "700", "800"] });
 
 const data = [
-  {
-    img: "img-1.jpg",
-    title: "Kegiatan Lomba Agustusan",
-    desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
-  {
-    img: "img-2.jpg",
-    title: "Kegiatan Lomba Agustusan",
-    desc: "Kegiatan lomba agustusan yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
-  {
-    img: "img-3.jpg",
-    title: "Kegiatan Outbond",
-    desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
-  {
-    img: "img-4.jpg",
-    title: "Kegiatan Outbond",
-    desc: "Kegiatan outbond yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
-  {
-    img: "img-5.jpg",
-    title: "Kegiatan Sosial",
-    desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
-  {
-    img: "img-8.jpg",
-    title: "Kegiatan Sosial",
-    desc: "Kegiatan sosial yang diselenggarakan oleh para santri HSI Boarding School.",
-  },
+  { img: "img-1.jpg", title: "Lomba Agustusan", desc: "Keseruan santri merayakan kemerdekaan." },
+  { img: "img-2.jpg", title: "Momen Juara", desc: "Semangat kompetisi yang sportif dan religius." },
+  { img: "img-3.jpg", title: "Outbond Seru", desc: "Membangun kerjasama tim di alam terbuka." },
+  { img: "img-4.jpg", title: "Eksplorasi Alam", desc: "Tadabbur alam untuk mengagumi ciptaan-Nya." },
+  { img: "img-5.jpg", title: "Bakti Sosial", desc: "Berbagi kebahagiaan dengan masyarakat sekitar." },
+  { img: "img-8.jpg", title: "Ukhuwah Islamiyah", desc: "Kebersamaan yang erat antar santri HSIBS." },
 ];
 
 export default function Gallery() {
+  const [current, setCurrent] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  // Responsivitas Lebar Kartu
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+  const cardWidth = isMobile ? 280 : 380; 
+  const gap = 20;
+
+  // Rumus Ajaib: Menghitung posisi agar card aktif tepat di tengah viewport
+  const centerOffset = (windowWidth - cardWidth) / 2;
+  const xTranslation = -current * (cardWidth + gap) + centerOffset;
+
+  const nextSlide = () => setCurrent((prev) => (prev === data.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => setCurrent((prev) => (prev === 0 ? data.length - 1 : prev - 1));
+
   return (
-    <div className="lg:mt-32 md:mt-16 flex items-center justify-center flex-col transition-all duration-300 mb-20">
-      <div className="my-8 lg:my-0 lg:mb-8 flex flex-col justify-center px-6 items-center gap-4 md:gap-3 max-w-6xl w-full mx-auto mb-20">
-        <div className="text-container flex flex-col justify-center items-center space-y-4 mb-20">
-          <div
-            className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl`}
+    <section className="py-20 bg-gray-50 overflow-hidden w-full">
+      <div className="max-w-6xl mx-auto px-6 mb-12 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-2xl mb-2`}
+        >
+          {`< Kegiatan Seru Santri />`}
+        </motion.div>
+        <h2 className={`${montserrat.className} font-extrabold text-3xl md:text-5xl text-blue-600 mb-6`}>
+          Keseruan Santri HSIBS
+        </h2>
+      </div>
+
+      <div className="relative w-full">
+        {/* Navigation Buttons - Hidden on Mobile for cleaner look */}
+        {!isMobile && (
+          <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between z-30 px-10 pointer-events-none">
+            <button onClick={prevSlide} className="pointer-events-auto bg-white/80 backdrop-blur-md shadow-lg hover:bg-white text-blue-600 rounded-full p-4 transition-all active:scale-90 border border-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button onClick={nextSlide} className="pointer-events-auto bg-white/80 backdrop-blur-md shadow-lg hover:bg-white text-blue-600 rounded-full p-4 transition-all active:scale-90 border border-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        )}
+
+        {/* Slider Container */}
+        <div className="relative h-[550px] w-full flex items-center cursor-grab active:cursor-grabbing">
+          <motion.div 
+            className="flex items-center"
+            animate={{ x: xTranslation }}
+            transition={{ type: "spring", stiffness: 200, damping: 25 }}
+            drag="x"
+            dragConstraints={{ left: -((data.length - 1) * (cardWidth + gap)), right: 0 }}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = offset.x + velocity.x;
+              if (swipe < -100 && current < data.length - 1) nextSlide();
+              else if (swipe > 100 && current > 0) prevSlide();
+            }}
           >
-            <p>{`< Kegiatan Seru Santri />`}</p>
-          </div>
-          <div
-            className={`${montserrat.className} text-center font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl lg:text-4xl`}
-          >
-            Keseruan Santri di HSI Boarding School
-          </div>
-          <div className="desc_Sect max-w-4xl">
-            <p
-              className={`${montserrat.className} text-center text-sm md:text-base lg:text-lg text-slate-700 leading-relaxed`}
-            >
-              Selama belajar di HSI, para santri nggak cuma fokus akademik dan
-              tahfidz, tapi juga aktif ikut berbagai acara seru yang menumbuhkan
-              ukhuwah, kepemimpinan, dan semangat belajar. Yuk, intip beberapa
-              momen terbaik mereka!
-            </p>
-          </div>
+            {data.map((item, index) => (
+              <motion.div
+                key={index}
+                animate={{
+                  scale: current === index ? 1 : 0.85,
+                  opacity: current === index ? 1 : 0.6,
+                }}
+                transition={{ duration: 0.4 }}
+                style={{ 
+                  width: cardWidth,
+                  marginRight: index === data.length - 1 ? 0 : gap 
+                }}
+                className="relative h-[450px] md:h-[500px] rounded-[32px] overflow-hidden shadow-xl flex-shrink-0 bg-white group"
+              >
+                <div className="w-full h-full relative">
+                   <ModalDialogImage
+                    image_triger={`/assets/gallery/${item.img}`}
+                    image={`/assets/gallery/${item.img}`}
+                    title={item.title}
+                    description={item.desc}
+                  />
+                  
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  
+                  {/* Text Content */}
+                  <div className="absolute bottom-8 left-6 right-6 text-white pointer-events-none">
+                    <motion.h3 
+                      animate={{ y: current === index ? 0 : 10 }}
+                      className={`${montserrat.className} text-xl md:text-2xl font-bold mb-2`}
+                    >
+                      {item.title}
+                    </motion.h3>
+                    <motion.p 
+                      animate={{ opacity: current === index ? 1 : 0 }}
+                      className="text-sm text-gray-200 line-clamp-2"
+                    >
+                      {item.desc}
+                    </motion.p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Indicators */}
+        <div className="flex justify-center gap-3 mt-8">
+          {data.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`transition-all duration-300 rounded-full ${
+                current === i ? "w-8 bg-blue-600 h-2" : "w-2 bg-blue-200 h-2"
+              }`}
+            />
+          ))}
         </div>
       </div>
-      <Carousel />
-    </div>
-  );
-}
-
-function Carousel() {
-  const [current, setCurrent] = useState(0);
-  const length = data.length;
-
-  const prevSlide = () => {
-    setCurrent((prev) => (prev === 0 ? length - 1 : prev - 1));
-  };
-
-  const nextSlide = () => {
-    setCurrent((prev) => (prev === length - 1 ? 0 : prev + 1));
-  };
-
-  return (
-    <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden select-none">
-      <AnimatePresence initial={false} mode="wait">
-        <motion.div
-          key={data[current].img}
-          className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-        >
-          <ModalDialogImage
-            image_triger={`/assets/gallery/${data[current].img}`}
-            image={`/assets/gallery/${data[current].img}`}
-            title={data[current].title}
-            description={data[current].desc}
-          />
-          {/* Overlay for text */}
-          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-center max-w-3xl px-4">
-            <h2
-              className={`${montserrat.className} text-white text-3xl md:text-5xl font-extrabold drop-shadow-lg`}
-            >
-              {data[current].title}
-            </h2>
-            <p
-              className={`${montserrat.className} text-white/90 mt-2 text-sm md:text-lg drop-shadow-md`}
-            >
-              {data[current].desc}
-            </p>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Prev Button */}
-      <button
-        onClick={prevSlide}
-        aria-label="Previous Slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 md:p-3 z-20 transition cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 md:h-8 md:w-8"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-
-      {/* Next Button */}
-      <button
-        onClick={nextSlide}
-        aria-label="Next Slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/100 duration-300 text-white rounded-full p-2 md:p-3 z-20 transition cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 md:h-8 md:w-8"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
+    </section>
   );
 }

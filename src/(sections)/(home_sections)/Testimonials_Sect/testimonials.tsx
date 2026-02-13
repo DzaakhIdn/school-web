@@ -68,36 +68,36 @@ const testimonials = [
 const Testimonials = () => (
   <div className="py-16 md:py-24 lg:py-32">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Header Section */}
+      {/* Header */}
       <div className="text-center mb-16 lg:mb-20">
         <div
           className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl mb-4`}
         >
           <p>{`< Testimoni Santri & Wali />`}</p>
         </div>
+
         <div
           className={`${montserrat.className} font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl lg:text-4xl`}
         >
-          <ScrollReveal
-            baseOpacity={0}
-            enableBlur={true}
-            baseRotation={5}
-            blurStrength={15}
-          >
+          <ScrollReveal baseOpacity={0} enableBlur baseRotation={5} blurStrength={15}>
             Cerita Inspiratif dari Keluarga Besar HSI
           </ScrollReveal>
         </div>
       </div>
 
-      {/* Testimonials Marquee */}
+      {/* Marquee */}
       <div className="relative">
-        <div className="absolute left-0 inset-y-0 w-[10%] bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="absolute right-0 inset-y-0 w-[10%] bg-gradient-to-l from-background to-transparent z-10" />
+        {/* Gradient kiri kanan */}
+        <div className="pointer-events-none absolute left-0 inset-y-0 w-[10%] bg-gradient-to-r from-background to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 inset-y-0 w-[10%] bg-gradient-to-l from-background to-transparent z-10" />
 
+        {/* Line atas → kiri */}
         <Marquee pauseOnHover className="[--duration:25s] mb-6">
           <TestimonialList />
         </Marquee>
-        <Marquee pauseOnHover reverse className="[--duration:25s]">
+
+        {/* Line bawah → kanan */}
+        <Marquee reverse pauseOnHover className="[--duration:25s]">
           <TestimonialList />
         </Marquee>
       </div>
@@ -106,48 +106,31 @@ const Testimonials = () => (
 );
 
 const TestimonialList = () =>
-  testimonials.map((testimonial) => (
+  testimonials.map((t) => (
     <div
-      key={testimonial.id}
+      key={t.id}
       className="group mx-4 w-80 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg p-6"
     >
       <div className="flex items-center gap-4 mb-4">
         <Avatar className="w-12 h-12">
           <AvatarFallback className="bg-blue-500 text-white font-semibold text-lg">
-            {testimonial.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
+            {t.name.split(" ").map((n) => n[0]).join("")}
           </AvatarFallback>
         </Avatar>
+
         <div>
-          <p
-            className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}
-          >
-            {testimonial.name}
+          <p className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 transition-colors`}>
+            {t.name}
           </p>
-          <p
-            className={`${montserrat.className} text-sm text-slate-600 dark:text-slate-400`}
-          >
-            {testimonial.role} • {testimonial.year}
+          <p className={`${montserrat.className} text-sm text-slate-600 dark:text-slate-400`}>
+            {t.role} • {t.year}
           </p>
         </div>
       </div>
 
-      {/* Quote */}
-      <div className="relative">
-        <div className="absolute -top-2 -left-1 text-4xl text-yellow-500/30 font-serif">
-          &quot;
-        </div>
-        <p
-          className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed pl-4`}
-        >
-          {testimonial.testimonial}
-        </p>
-        <div className="absolute -bottom-4 -right-1 text-4xl text-yellow-500/30 font-serif rotate-180">
-          &quot;
-        </div>
-      </div>
+      <p className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed`}>
+        {t.testimonial}
+      </p>
     </div>
   ));
 

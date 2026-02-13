@@ -1,119 +1,91 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Montserrat } from "next/font/google";
-import Image from "next/image";
-import { YoutubeIcon, FacebookIcon, InstagramIcon } from "lucide-react";
+import { YoutubeIcon, FacebookIcon, InstagramIcon, MapPin } from "lucide-react";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
-const footerLinks = [
-  {
-    title: "Overview",
-    href: "#",
-  },
-  {
-    title: "Features",
-    href: "#",
-  },
-  {
-    title: "Pricing",
-    href: "#",
-  },
-  {
-    title: "Careers",
-    href: "#",
-  },
-  {
-    title: "Help",
-    href: "#",
-  },
-  {
-    title: "Privacy",
-    href: "#",
-  },
-];
-
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <div
-      className={`mt-20 border-t-2 border-slate-200 flex flex-col md:p-8 ${montserrat.className}`}
-    >
-      <div className="grow shadow" />
-      <footer>
-        <div className="max-w-screen-xl mx-auto">
-          <div className="py-12 flex flex-col sm:flex-row items-start justify-between gap-x-8 gap-y-10 px-6 xl:px-0">
-            <div>
-              {/* Logo */}
-              <Image
-                src="/important/logo.png"
-                alt="logo"
-                width={100}
-                height={100}
-                className="w-12 h-auto sm:w-16 md:w-17"
-              />
+    <footer className={`${montserrat.className} mt-20 bg-blue-500 text-white`}>
+      <div className="max-w-screen-xl mx-auto px-6 py-12 xl:px-0">
+        
+        {/* Main Footer Content: 4 Kolom Sejajar & Center */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 items-start">
+          
+          {/* Kolom 1: Tentang Kami */}
+          <div className="flex flex-col items-center text-center">
+            <h6 className="font-bold mb-4 border-b-2 border-blue-400 pb-1 w-fit">
+              Tentang Kami
+            </h6>
+            <ul className="space-y-2 text-sm text-blue-50">
+              <li><Link href="/visi-misi" className="hover:underline">Visi Misi</Link></li>
+              <li><Link href="/program" className="hover:underline">Program</Link></li>
+              <li><Link href="/galeri" className="hover:underline">Galeri</Link></li>
+              <li><Link href="/testimoni" className="hover:underline">Testimoni</Link></li>
+            </ul>
+          </div>
 
-              <ul className="mt-6 text-sm lg:text-base flex items-center gap-4 flex-wrap">
-                {footerLinks.map(({ title, href }) => (
-                  <li key={title}>
-                    <Link
-                      href={href}
-                      className="text-muted-foreground hover:text-foreground hover:cursor-pointer"
-                    >
-                      {title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Kolom 2: Part of Us */}
+          <div className="flex flex-col items-center text-center">
+            <h6 className="font-bold mb-4 border-b-2 border-blue-400 pb-1 w-fit">
+              Kami Bekerja Sama Dengan
+            </h6>
+            <ul className="space-y-2 text-sm text-blue-50">
+              <li><Link href="#" className="hover:underline">HSI Abdullah Roy</Link></li>
+              <li><Link href="#" className="hover:underline">Markaz Mulazamah Yassalam</Link></li>
+              <li><Link href="#" className="hover:underline">Global English</Link></li>
+            </ul>
+          </div>
 
-            {/* Subscribe Newsletter */}
-            <div className="max-w-xs w-full">
-              <h6 className="font-semibold text-sm md:text-lg">
-                Stay up to date
-              </h6>
-              <form className="mt-4 flex items-center gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="text-sm"
-                />
-                <Button className="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer">
-                  Subscribe
-                </Button>
-              </form>
+          {/* Kolom 3: Lokasi Kami (Sekarang Sejajar di Atas) */}
+          <div className="flex flex-col items-center text-center">
+            <h6 className="font-bold mb-4 border-b-2 border-blue-400 pb-1 w-fit">
+              Lokasi Kami
+            </h6>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-sm text-blue-50 leading-relaxed max-w-[200px]">
+                2QJP+M6X, RT.03/RW.08, Cikembar, Kec. Cikembar, Kabupaten Sukabumi, Jawa Barat 43157
+              </p>
             </div>
           </div>
-          <Separator />
-          <div className="py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6 xl:px-0">
-            {/* Copyright */}
-            <span className="text-slate-400 italic text-xs">
-              &copy; {new Date().getFullYear()}{" "}
-              <Link href="/" target="_blank">
-                HSI Boarding School
-              </Link>
-              . All rights reserved.
-            </span>
 
-            <div className="flex items-center gap-5 text-muted-foreground">
-              <Link href="#" target="_blank">
-                <YoutubeIcon className="h-5 w-5" />
+          {/* Kolom 4: Ikuti Kami */}
+          <div className="flex flex-col items-center text-center">
+            <h6 className="font-bold mb-4 border-b-2 border-blue-400 pb-1 w-fit">
+              Ikuti Kami
+            </h6>
+            <div className="flex gap-4">
+              <Link href="https://www.instagram.com/hsi.boardingschool/" target="_blank" className="hover:scale-110 transition-transform">
+                <InstagramIcon size={24} />
               </Link>
-              <Link href="#" target="_blank">
-                <InstagramIcon className="h-5 w-5" />
+              <Link href="https://web.facebook.com/profile.php?id=61586171438715&locale=id_ID" target="_blank" className="hover:scale-110 transition-transform">
+                <FacebookIcon size={24} />
               </Link>
-              <Link href="#" target="_blank">
-                <FacebookIcon className="h-5 w-5" />
+              <Link href="" target="_blank" className="hover:scale-110 transition-transform">
+                <YoutubeIcon size={24} />
               </Link>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Bagian Bawah: Hanya Separator dan Copyright */}
+        <div className="mt-12">
+          <Separator className="mb-8 bg-blue-400" />
+          <div className="text-center">
+            <p className="text-xs text-blue-200 italic">
+              &copy; {currentYear} HSI Boarding School. All rights reserved.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </footer>
   );
 };
 
