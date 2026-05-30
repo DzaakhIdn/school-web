@@ -47,15 +47,15 @@ export default function ProgramSection() {
   const [activeId, setActiveId] = useState(2);
 
   return (
-    <section className="w-full min-h-screen bg-white py-16 px-4 md:px-10">
+    <section className="w-full min-h-screen bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       
       {/* JUDUL ATAS */}
-      <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl mb-4 text-center`}>
+      <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 text-center`}>
         <p>{`< Program Kami />`}</p>
       </div>
 
       {/* TEKS HERO */}
-      <div className={`${montserrat.className} text-center font-extrabold tracking-tight text-2xl text-blue-500 md:text-4xl mb-16 max-w-4xl mx-auto px-4`}>
+      <div className={`${montserrat.className} text-center font-extrabold tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl text-blue-500 mb-12 sm:mb-16 max-w-4xl mx-auto px-4`}>
         <motion.div
           initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
           whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
@@ -67,7 +67,7 @@ export default function ProgramSection() {
       </div>
 
       {/* CONTAINER CARD UTAMA */}
-      <div className="flex h-[70vh] min-h-[600px] w-full bg-white overflow-hidden rounded-3xl shadow-xl border border-gray-100">
+      <div className="flex flex-col md:flex-row h-auto md:h-[70vh] md:min-h-[600px] w-full bg-white overflow-hidden rounded-2xl md:rounded-3xl shadow-xl border border-gray-100">
         {programs.map((program) => {
           const isActive = activeId === program.id;
 
@@ -77,17 +77,16 @@ export default function ProgramSection() {
               onClick={() => setActiveId(program.id)}
               animate={{
                 flex: isActive ? 4 : 1,
-                // Berubah ke Blue-500 saat tertutup, Putih saat terbuka
                 backgroundColor: isActive ? "#ffffff" : "#3b82f6"
               }}
               transition={{ 
                 duration: 0.7, 
                 ease: [0.4, 0, 0.2, 1] 
               }}
-              className="relative overflow-hidden cursor-pointer border-r border-white/10 flex flex-col items-start"
+              className="relative overflow-hidden cursor-pointer border-r border-b md:border-b-0 border-white/10 flex flex-col items-start min-h-32 md:min-h-0"
             >
-              {/* Nomor Index - Putih transparan saat tertutup agar tetap elegan */}
-              <div className={`absolute top-8 right-8 font-bold text-xl transition-colors duration-500 z-20 ${isActive ? 'text-blue-600' : 'text-blue-100/60'}`}>
+              {/* Nomor Index */}
+              <div className={`absolute top-4 sm:top-6 md:top-8 right-4 sm:right-6 md:right-8 font-bold text-lg sm:text-xl transition-colors duration-500 z-20 ${isActive ? 'text-blue-600' : 'text-blue-100/60'}`}>
                 {program.number}
               </div>
 
@@ -101,7 +100,7 @@ export default function ProgramSection() {
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 flex items-center justify-center p-4"
                   >
-                    <span className="rotate-[-90deg] whitespace-nowrap text-white font-bold tracking-[0.2em] uppercase text-xs md:text-sm">
+                    <span className="md:rotate-[-90deg] whitespace-normal md:whitespace-nowrap text-white font-bold tracking-[0.2em] uppercase text-xs sm:text-sm line-clamp-2 md:line-clamp-none text-center">
                       {program.subtitle}
                     </span>
                   </motion.div>
@@ -116,14 +115,14 @@ export default function ProgramSection() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, transition: { duration: 0.2 } }}
                     transition={{ delay: 0.3, duration: 0.5 }}
-                    className="w-full h-full flex flex-col justify-between p-10 md:p-14 z-10"
+                    className="w-full h-full flex flex-col justify-between p-6 sm:p-8 md:p-10 lg:p-14 z-10"
                   >
                     <div className="max-w-3xl">
                       <motion.span 
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="text-blue-500 font-bold text-sm uppercase tracking-widest mb-4 block"
+                        className="text-blue-500 font-bold text-xs sm:text-sm uppercase tracking-widest mb-3 sm:mb-4 block"
                       >
                         {program.subtitle}
                       </motion.span>
@@ -132,7 +131,7 @@ export default function ProgramSection() {
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="text-3xl md:text-5xl font-black mb-6 text-gray-900 leading-[1.1]"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 text-gray-900 leading-[1.1]"
                       >
                         {program.title}
                       </motion.h3>
@@ -141,7 +140,7 @@ export default function ProgramSection() {
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7 }}
-                        className="text-gray-600 mb-8 text-base md:text-lg leading-relaxed max-w-xl"
+                        className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl"
                       >
                         {program.description}
                       </motion.p>
@@ -151,14 +150,14 @@ export default function ProgramSection() {
                       initial={{ opacity: 0, scale: 0.95, y: 20 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ delay: 0.8, duration: 0.6 }}
-                      className="relative h-64 md:h-80 w-full mt-auto"
+                      className="relative h-48 sm:h-56 md:h-64 lg:h-80 w-full mt-auto"
                     >
                       <Image
                         src={program.image}
                         alt={program.title}
                         fill
                         priority
-                        className="rounded-2xl object-cover shadow-2xl shadow-blue-100"
+                        className="rounded-xl md:rounded-2xl object-cover shadow-2xl shadow-blue-100"
                       />
                     </motion.div>
                   </motion.div>

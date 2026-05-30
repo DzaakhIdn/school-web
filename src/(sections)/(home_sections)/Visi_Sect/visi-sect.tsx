@@ -58,17 +58,17 @@ export default function VisiSect(): JSX.Element {
 
   return (
     <>
-      <div className="min-h-screen md:mt-32 lg:mt-0 flex items-center justify-center flex-col transition-all duration-300 px-4 sm:px-6 md:px-8 py-12">
-        <div className="my-10 lg:my-0 lg:mb-10 flex flex-col justify-center items-center gap-4 md:gap-3 max-w-6xl w-full mx-auto">
+      <div className="min-h-screen md:mt-20 lg:mt-0 flex items-center justify-center flex-col transition-all duration-300 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+        <div className="my-8 sm:my-10 lg:my-0 lg:mb-10 flex flex-col justify-center items-center gap-3 sm:gap-4 md:gap-6 max-w-6xl w-full mx-auto">
           {/* Section Title */}
           <div
-            className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl`}
+            className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl`}
           >
             <p>{`< Visi Singkat Sekolah />`}</p>
           </div>
 
           <div
-            className={`${montserrat.className} text-center font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl`}
+            className={`${montserrat.className} text-center font-extrabold tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl text-blue-500`}
           >
             <ScrollReveal
               baseOpacity={0}
@@ -81,10 +81,10 @@ export default function VisiSect(): JSX.Element {
           </div>
 
           {/* Content */}
-          <div className="container-content flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12 mt-10 w-full">
+          <div className="container-content flex flex-col lg:flex-row justify-center items-center lg:items-start gap-6 sm:gap-8 lg:gap-12 mt-8 sm:mt-10 w-full">
             {/* LEFT SIDE */}
             <div className="right-side-tab flex justify-center lg:justify-end lg:flex-1 w-full">
-              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] rounded-lg overflow-hidden group">
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl h-56 sm:h-72 md:h-80 lg:h-96 xl:h-[28rem] rounded-lg overflow-hidden group">
                 <Image
                   src={content[activeTab].img}
                   alt="gambar"
@@ -95,7 +95,7 @@ export default function VisiSect(): JSX.Element {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div className="w-full h-1/2 bg-gradient-to-t from-black to-transparent absolute bottom-0 left-0"></div>
                 <p
-                  className={`${raleway.className} absolute bottom-6 left-6 right-6 text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight`}
+                  className={`${raleway.className} absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 text-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight`}
                 >
                   {content[activeTab].img_title}
                 </p>
@@ -103,16 +103,16 @@ export default function VisiSect(): JSX.Element {
             </div>
 
             {/* RIGHT SIDE IMAGE */}
-            <div className="left-side-tab flex flex-col gap-6 lg:flex-1 w-full">
+            <div className="left-side-tab flex flex-col gap-4 sm:gap-6 lg:flex-1 w-full">
               {/* TAB BUTTON */}
-              <div className="tab-button flex gap-2 justify-center lg:justify-start">
+              <div className="tab-button flex gap-2 justify-center lg:justify-start flex-wrap">
                 {(["visi", "misi"] as TabKey[]).map((tab) => (
                   <Button
                     key={tab}
                     onClick={() => setTabActive(tab)}
-                    className={`text-blue-500 text-sm sm:text-base ${
+                    className={`text-blue-500 text-xs sm:text-sm md:text-base ${
                       montserrat.className
-                    } font-semibold px-10 sm:px-24 py-3 sm:py-6 hover:cursor-pointer hover:bg-blue-500 hover:text-white duration-200 ease-in-out ${
+                    } font-semibold px-6 sm:px-8 md:px-12 lg:px-16 py-2 sm:py-3 md:py-4 hover:cursor-pointer active:bg-blue-500 active:text-white duration-200 ease-in-out ${
                       activeTab === tab
                         ? "bg-blue-500 text-white border border-blue-500"
                         : "bg-transparent border border-blue-500"
@@ -124,14 +124,14 @@ export default function VisiSect(): JSX.Element {
               </div>
 
               {/* TAB CONTENT */}
-              <div className="tab-title space-y-4 sm:space-y-6 text-center lg:text-left">
+              <div className="tab-title space-y-3 sm:space-y-4 md:space-y-6 text-center lg:text-left">
                 <p
-                  className={`${raleway.className} font-extrabold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-slate-800`}
+                  className={`${raleway.className} font-extrabold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-slate-800`}
                 >
                   {content[activeTab].title}
                 </p>
                 <p
-                  className={`${montserrat.className} text-slate-700 text-sm md:text-base lg:text-lg`}
+                  className={`${montserrat.className} text-slate-700 text-xs sm:text-sm md:text-base lg:text-lg`}
                 >
                   {content[activeTab].description}
                 </p>
@@ -139,9 +139,9 @@ export default function VisiSect(): JSX.Element {
 
               {/* DESKTOP ONLY BUTTON */}
               <div className="button-learn hidden lg:block">
-                <Button variant={"outline"} className="py-4">
+                <Button variant={"outline"} className="py-3 md:py-4">
                   <span
-                    className={`${poppins.className} text-base hover:cursor-pointer hover:text-blue-500`}
+                    className={`${poppins.className} text-sm md:text-base hover:cursor-pointer hover:text-blue-500`}
                   >
                     Selengkapnya
                   </span>
@@ -152,9 +152,9 @@ export default function VisiSect(): JSX.Element {
 
             {/* MOBILE ONLY BUTTON */}
             <div className="button-learn lg:hidden w-full group">
-              <Button variant={"outline"} className="py-4 w-full">
+              <Button variant={"outline"} className="py-3 w-full">
                 <span
-                  className={`${poppins.className} text-base group-hover:cursor-pointer group-hover:text-blue-500`}
+                  className={`${poppins.className} text-sm group-hover:cursor-pointer group-hover:text-blue-500`}
                 >
                   Selengkapnya
                 </span>

@@ -66,18 +66,18 @@ const testimonials = [
 ];
 
 const Testimonials = () => (
-  <div className="py-16 md:py-24 lg:py-32">
+  <div className="py-12 sm:py-16 md:py-24 lg:py-32">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="text-center mb-16 lg:mb-20">
+      <div className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24">
         <div
-          className={`${spaceGrotesk.className} font-bold text-yellow-500 text-xl lg:text-3xl mb-4`}
+          className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-3 sm:mb-4`}
         >
           <p>{`< Testimoni Santri & Wali />`}</p>
         </div>
 
         <div
-          className={`${montserrat.className} font-extrabold tracking-tight text-2xl text-blue-500 md:text-3xl lg:text-4xl`}
+          className={`${montserrat.className} font-extrabold tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl text-blue-500`}
         >
           <ScrollReveal baseOpacity={0} enableBlur baseRotation={5} blurStrength={15}>
             Cerita Inspiratif dari Keluarga Besar HSI
@@ -88,11 +88,11 @@ const Testimonials = () => (
       {/* Marquee */}
       <div className="relative">
         {/* Gradient kiri kanan */}
-        <div className="pointer-events-none absolute left-0 inset-y-0 w-[10%] bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 inset-y-0 w-[10%] bg-gradient-to-l from-background to-transparent z-10" />
+        <div className="pointer-events-none absolute left-0 inset-y-0 w-[8%] sm:w-[10%] bg-gradient-to-r from-background to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 inset-y-0 w-[8%] sm:w-[10%] bg-gradient-to-l from-background to-transparent z-10" />
 
         {/* Line atas → kiri */}
-        <Marquee pauseOnHover className="[--duration:25s] mb-6">
+        <Marquee pauseOnHover className="[--duration:25s] mb-4 sm:mb-6">
           <TestimonialList />
         </Marquee>
 
@@ -109,26 +109,26 @@ const TestimonialList = () =>
   testimonials.map((t) => (
     <div
       key={t.id}
-      className="group mx-4 w-80 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg p-6"
+      className="group mx-2 sm:mx-3 md:mx-4 w-72 sm:w-80 bg-white dark:bg-slate-900 rounded-lg md:rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg p-4 sm:p-6"
     >
-      <div className="flex items-center gap-4 mb-4">
-        <Avatar className="w-12 h-12">
-          <AvatarFallback className="bg-blue-500 text-white font-semibold text-lg">
+      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+        <Avatar className="w-10 sm:w-12 h-10 sm:h-12">
+          <AvatarFallback className="bg-blue-500 text-white font-semibold text-sm sm:text-lg">
             {t.name.split(" ").map((n) => n[0]).join("")}
           </AvatarFallback>
         </Avatar>
 
-        <div>
-          <p className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 transition-colors`}>
+        <div className="min-w-0">
+          <p className={`${montserrat.className} font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 transition-colors text-sm sm:text-base truncate`}>
             {t.name}
           </p>
-          <p className={`${montserrat.className} text-sm text-slate-600 dark:text-slate-400`}>
+          <p className={`${montserrat.className} text-xs sm:text-sm text-slate-600 dark:text-slate-400 truncate`}>
             {t.role} • {t.year}
           </p>
         </div>
       </div>
 
-      <p className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed`}>
+      <p className={`${montserrat.className} text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm line-clamp-4`}>
         {t.testimonial}
       </p>
     </div>

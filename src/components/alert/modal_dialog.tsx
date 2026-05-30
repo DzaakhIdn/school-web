@@ -37,8 +37,9 @@ export function ModalDialogImage({
           <Image
             src={image_triger}
             alt={title}
-            width={300}
-            height={300}
+            width={1200}
+            height={1200}
+            quality={100}
             className="w-full h-full object-cover"
           />
           <div className=" absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -55,8 +56,9 @@ export function ModalDialogImage({
           <Image
             src={image}
             alt={title}
-            width={300}
-            height={300}
+            width={1200}
+            height={1200}
+            quality={100}
             className="rounded-lg w-full h-auto"
           />
           <AlertDialogDescription
