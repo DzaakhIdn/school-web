@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { motion, Transition } from "framer-motion";
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useLayoutEffect } from "react";
 
 type BlurTextProps = {
   text?: string;
@@ -49,10 +49,15 @@ const BlurText: React.FC<BlurTextProps> = ({
 }) => {
   const elements = animateBy === "words" ? text.split(" ") : text.split("");
   const [inView, setInView] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
 
+  useLayoutEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   useEffect(() => {
-    if (!ref.current) return;
+    if (!isMounted || !ref.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -64,7 +69,7 @@ const BlurText: React.FC<BlurTextProps> = ({
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, isMounted]);
 
   const defaultFrom = useMemo(
     () =>
@@ -96,7 +101,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   );
 
   return (
-    <p ref={ref} className={`blur-text ${className} flex flex-wrap`}>
+    <p ref={ref} className={`blur-text ${className} flex flex-wrap`} suppressHydrationWarning>
       {elements.map((segment, index) => {
         const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
 
@@ -111,7 +116,7 @@ const BlurText: React.FC<BlurTextProps> = ({
           <motion.span
             key={index}
             initial={fromSnapshot}
-            animate={inView ? animateKeyframes : fromSnapshot}
+            animate={isMounted && inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
             onAnimationComplete={
               index === elements.length - 1 ? onAnimationComplete : undefined

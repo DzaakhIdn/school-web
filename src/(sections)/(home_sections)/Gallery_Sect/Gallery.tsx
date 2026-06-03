@@ -1,7 +1,7 @@
 "use client";
 
 import { Space_Grotesk, Montserrat } from "next/font/google";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import { ModalDialogImage } from "@/components/alert/modal_dialog";
 
@@ -18,17 +18,22 @@ const data = [
 ];
 
 export default function Gallery() {
+  const [isMounted, setIsMounted] = useState(false);
   const [current, setCurrent] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
-  // Auto-play carousel
+  useLayoutEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Auto-play carousel - only on client
   useEffect(() => {
-    if (!autoPlay) return;
+    if (!isMounted || !autoPlay) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === data.length - 1 ? 0 : prev + 1));
     }, 5000);
     return () => clearInterval(timer);
-  }, [autoPlay]);
+  }, [autoPlay, isMounted]);
 
   const nextSlide = () => {
     setCurrent((prev) => (prev === data.length - 1 ? 0 : prev + 1));
@@ -41,7 +46,7 @@ export default function Gallery() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden w-full">
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden w-full" suppressHydrationWarning>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div 

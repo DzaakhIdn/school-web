@@ -80,7 +80,7 @@ export default function NotFound() {
         )
         // Animasi buttons
         .fromTo(
-          buttonsRef.current?.children,
+          buttonsRef.current?.children || [],
           {
             opacity: 0,
             y: 20,
@@ -98,19 +98,21 @@ export default function NotFound() {
         );
 
       // Floating animation untuk background elements
-      gsap.to(floatingRef.current?.children, {
-        y: "random(-20, 20)",
-        x: "random(-15, 15)",
-        rotation: "random(-10, 10)",
-        duration: "random(2, 4)",
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        stagger: {
-          amount: 2,
-          from: "random",
-        },
-      });
+      if (floatingRef.current?.children) {
+        gsap.to(floatingRef.current.children, {
+          y: "random(-20, 20)",
+          x: "random(-15, 15)",
+          rotation: "random(-10, 10)",
+          duration: "random(2, 4)",
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          stagger: {
+            amount: 2,
+            from: "random",
+          },
+        });
+      }
 
       // Hover animations untuk buttons
       const buttons = buttonsRef.current?.querySelectorAll("button, a");

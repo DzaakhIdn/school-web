@@ -58,6 +58,7 @@ const VerticalLoop = ({
           ease: "linear",
           repeat: Infinity,
         }}
+        suppressHydrationWarning
       >
         {[...images, ...images].map((src, idx) => (
           <div

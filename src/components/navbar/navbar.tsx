@@ -3,7 +3,7 @@ import Image from "next/image";
 import { NavigationSheet } from "./navigation-sheet";
 import Navigation from "./navigation";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 
 const navItems = [
   {
@@ -16,7 +16,7 @@ const navItems = [
   {
     items: [
       { title: "Program", href: "/programs" },
-      { title: "Blog", href: "/blog" },
+      { title: "Lokasi", href: "/location" },
       { title: "Kontak", href: "/contact" },
     ],
   },
@@ -25,13 +25,21 @@ const navItems = [
 const Navbar = () => {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useLayoutEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 50);
+    if (isMounted) {
+      setIsScrolled(latest > 50);
+    }
   });
   return (
     <motion.nav
       initial={false}
+      suppressHydrationWarning
       className={`h-16 md:h-20 fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled
           ? "bg-white/80 backdrop-blur-md shadow-md h-20"

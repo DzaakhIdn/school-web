@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText as GSAPSplitText } from "gsap/SplitText";
@@ -37,9 +37,14 @@ const SplitText: React.FC<SplitTextProps> = ({
   const ref = useRef<HTMLParagraphElement>(null);
   const animationCompletedRef = useRef(false);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useLayoutEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !ref.current || !text) return;
+    if (!isMounted || typeof window === "undefined" || !ref.current || !text) return;
 
     const el = ref.current;
 
@@ -148,6 +153,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     threshold,
     rootMargin,
     onLetterAnimationComplete,
+    isMounted,
   ]);
 
   return (
@@ -158,6 +164,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         textAlign,
         wordWrap: "break-word",
       }}
+      suppressHydrationWarning
     >
       {text}
     </p>

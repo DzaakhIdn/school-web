@@ -27,13 +27,14 @@ const poppins = Poppins({
 
 const Hero = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-between align-center gap-5 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col justify-between align-center gap-5 py-6 px-4 sm:px-6 lg:px-8" suppressHydrationWarning>
       <BackgroundPattern />
       <motion.div
         className="logo flex items-center justify-center z-10"
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.3 }}
+        suppressHydrationWarning
       >
         <Image
           src="/important/logo.png"
@@ -77,6 +78,7 @@ const Hero = () => {
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 1.3 }}
             className="w-full sm:w-auto"
+            suppressHydrationWarning
           >
             <Button
               variant="default"
@@ -91,6 +93,7 @@ const Hero = () => {
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 1.3, delay: 0.5 }}
             className="w-full sm:w-auto"
+            suppressHydrationWarning
           >
             <Button
               variant="outline"
@@ -107,6 +110,7 @@ const Hero = () => {
         exit={{ opacity: 0, y: -50 }}
         transition={{ duration: 1.3 }}
         className="px-4"
+        suppressHydrationWarning
       >
         <p
           className={`${poppins.className} text-xs sm:text-sm font-light italic letter-spacing-2 text-slate-400 text-center`}

@@ -1,11 +1,13 @@
 "use client";
-// import Image from "next/image";
-import Hero from "@/components/Hero/hero";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <Hero />
-    </>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/home");
+  }, [router]);
+
+  return null;
 }
