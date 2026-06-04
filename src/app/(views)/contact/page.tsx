@@ -54,7 +54,7 @@ const cabangData: CabangData[] = [
     nama: "HSI Boarding School Sukabumi",
     tipe: "ikhwan",
     nomor: "089623039600",
-    email: "smait@hsi.id",
+    email: "boardingschool@hsi.id",
     icon: "🔷",
     color: "green",
     badgeColor: "bg-green-100 text-green-700",
@@ -64,7 +64,7 @@ const cabangData: CabangData[] = [
     nama: "HSI Boarding School Purworejo",
     tipe: "ikhwan",
     nomor: "085126184921",
-    email: "smait@hsi.id",
+    email: "boardingschool@hsi.id",
     icon: "🔷",
     color: "blue",
     badgeColor: "bg-blue-100 text-blue-700",
@@ -74,7 +74,7 @@ const cabangData: CabangData[] = [
     nama: "HSI Boarding School Bekasi",
     tipe: "akhwat",
     nomor: "089524513151",
-    email: "smait@hsi.id",
+    email: "boardingschool@hsi.id",
     icon: "💗",
     color: "pink",
     badgeColor: "bg-pink-100 text-pink-700",
@@ -182,10 +182,10 @@ export default function ContactPage() {
                 <div className="flex-1">
                   <h3 className={`${raleway.className} font-bold text-lg text-blue-600 mb-2`}>Email</h3>
                   <Link
-                    href="mailto:smait@hsi.id"
+                    href="mailto:boardingschool@hsi.id"
                     className="text-slate-700 hover:text-blue-600 transition-colors font-semibold"
                   >
-                    smait@hsi.id
+                    boardingschool@hsi.id
                   </Link>
                 </div>
               </div>

@@ -20,7 +20,7 @@ const menuItems = [
   { title: "Tentang", href: "/about" },
   { title: "Program", href: "/programs" },
   { title: "Galeri", href: "/gallery" },
-  { title: "Blog", href: "/blog" },
+  { title: "Lokasi", href: "/location" },
   { title: "Kontak", href: "/contact" },
 ];
 
