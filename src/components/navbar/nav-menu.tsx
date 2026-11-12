@@ -1,28 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { Montserrat } from "next/font/google";
+import { montserrat } from "@/lib/fonts";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+import { cn } from "@/lib/utils";
+import { navLinks as menuItems } from "./nav-items";
+
 
 interface NavMenuProps {
   orientation?: "horizontal" | "vertical";
   className?: string;
 }
-
-const menuItems = [
-  { title: "Beranda", href: "/home" },
-  { title: "Tentang", href: "/about" },
-  { title: "Program", href: "/programs" },
-  { title: "Galeri", href: "/gallery" },
-  { title: "Lokasi", href: "/location" },
-  { title: "Kontak", href: "/contact" },
-];
 
 export const NavMenu = ({
   orientation = "horizontal",
@@ -30,6 +21,8 @@ export const NavMenu = ({
 }: NavMenuProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const pathname = usePathname();
+  const isVertical = orientation === "vertical";
   const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -42,11 +35,11 @@ export const NavMenu = ({
 
       if (!link || !underline || !text) return;
 
-      // Initial states
+      // Initial states (garis vertikal memakai scaleY, horizontal memakai scaleX)
       gsap.set(underline, {
-        scaleX: 0,
-        transformOrigin:
-          orientation === "vertical" ? "top center" : "left center",
+        scaleX: isVertical ? 1 : 0,
+        scaleY: isVertical ? 0 : 1,
+        transformOrigin: isVertical ? "top center" : "left center",
       });
 
       const handleMouseEnter = () => {
@@ -56,14 +49,15 @@ export const NavMenu = ({
         // Animate underline
         gsap.to(underline, {
           scaleX: 1,
+          scaleY: 1,
           duration: 0.4,
           ease: "power2.out",
         });
 
         // Animate text
         gsap.to(text, {
-          x: orientation === "vertical" ? 8 : 0,
-          y: orientation === "vertical" ? 0 : -3,
+          x: isVertical ? 8 : 0,
+          y: isVertical ? 0 : -3,
           scale: 1.05,
           color: "#3b82f6",
           duration: 0.3,
@@ -76,7 +70,8 @@ export const NavMenu = ({
 
         // Animate underline
         gsap.to(underline, {
-          scaleX: 0,
+          scaleX: isVertical ? 1 : 0,
+          scaleY: isVertical ? 0 : 1,
           duration: 0.3,
           ease: "power2.out",
         });
@@ -102,7 +97,7 @@ export const NavMenu = ({
         item.removeEventListener("mouseleave", () => {});
       });
     };
-  }, [orientation]);
+  }, [isVertical]);
 
   return (
     <nav ref={menuRef} className={`${className}`}>
@@ -113,34 +108,41 @@ export const NavMenu = ({
             : "items-center justify-center"
         }`}
       >
-        {menuItems.map((item, index) => (
-          <li
-            key={item.title}
-            className="nav-menu-item relative"
-            data-item={item.title}
-            style={{
-              animationDelay: `${index * 100}ms`,
-            }}
-          >
-            <Link href={item.href} className="relative block px-2 py-2">
-              <span
-                className={`nav-menu-text relative z-10 text-base font-medium text-gray-700 transition-all duration-300 ${montserrat.className}`}
-              >
-                {item.title}
-              </span>
+        {menuItems.map((item, index) => {
+          const isActive = pathname === item.href;
+          return (
+            <li
+              key={item.title}
+              className="nav-menu-item relative"
+              data-item={item.title}
+              style={{
+                animationDelay: `${index * 100}ms`,
+              }}
+            >
+              <Link href={item.href} className="relative block px-2 py-2" aria-current={isActive ? "page" : undefined}>
+                <span
+                  className={cn(
+                    "nav-menu-text relative z-10 text-base font-medium transition-all duration-300",
+                    isActive ? "font-semibold text-blue-600" : "text-gray-700",
+                    montserrat.className
+                  )}
+                >
+                  {item.title}
+                </span>
 
-              {/* Underline */}
-              <span
-                className={`nav-menu-underline absolute ${
-                  orientation === "vertical"
-                    ? "left-0 top-0 w-0.5 h-full bg-gradient-to-b"
-                    : "bottom-0 left-0 w-full h-0.5 bg-gradient-to-r"
-                } from-blue-500 to-indigo-600 rounded-full`}
-                style={{ transform: "scaleX(0)" }}
-              />
-            </Link>
-          </li>
-        ))}
+                {/* Underline */}
+                <span
+                  className={`nav-menu-underline absolute ${
+                    isVertical
+                      ? "left-0 top-0 w-0.5 h-full bg-gradient-to-b"
+                      : "bottom-0 left-0 w-full h-0.5 bg-gradient-to-r"
+                  } from-blue-500 to-indigo-600 rounded-full`}
+                  style={{ transform: isVertical ? "scaleY(0)" : "scaleX(0)" }}
+                />
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

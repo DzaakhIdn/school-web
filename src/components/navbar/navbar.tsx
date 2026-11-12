@@ -1,99 +1,91 @@
 "use client";
-import Image from "next/image";
-import { NavigationSheet } from "./navigation-sheet";
-import Navigation from "./navigation";
-import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { useState, useLayoutEffect } from "react";
 
-const navItems = [
-  {
-    items: [
-      { title: "Beranda", href: "/home" },
-      { title: "Tentang", href: "/about" },
-      { title: "Galeri", href: "/gallery" },
-    ],
-  },
-  {
-    items: [
-      { title: "Program", href: "/programs" },
-      { title: "Lokasi", href: "/location" },
-      { title: "Kontak", href: "/contact" },
-    ],
-  },
-];
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { montserrat } from "@/lib/fonts";
+
+import { cn } from "@/lib/utils";
+
+import { BrandLogo } from "./logo";
+import { NavigationSheet } from "./navigation-sheet";
+import { navCta, navLinks } from "./nav-items";
+
+
+/**
+ * Navbar bar putih penuh items — bentuknya tidak pernah berubah; saat scroll
+ * cukup mendapat drop shadow. Aturan radius konsentris: outer = inner + padding
+ * (elemen dalam bar memakai radius penuh → selisihnya = padding-nya).
+ */
+const SCROLL_THRESHOLD = 24;
 
 const Navbar = () => {
-  const { scrollY } = useScroll();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
-  useLayoutEffect(() => {
-    setIsMounted(true);
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (isMounted) {
-      setIsScrolled(latest > 50);
-    }
-  });
   return (
-    <motion.nav
-      initial={false}
-      suppressHydrationWarning
-      className={`h-16 md:h-20 fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300",
         isScrolled
-          ? "bg-white/80 backdrop-blur-md shadow-md h-20"
-          : "bg-transparent lg:h-24"
-      }`}
+          ? "shadow-[0_12px_32px_-12px_rgba(15,23,42,0.28)]"
+          : "shadow-none",
+        montserrat.className
+      )}
     >
-      {/* Desktop Navigation */}
-      <div className="h-full hidden lg:flex items-center justify-between max-w-screen-xl mx-auto px-6 lg:px-8">
-        <div className="flex-1 flex justify-start">
-          <Navigation menuItems={navItems} index={0} align="start" />
-        </div>
-        
-        <div className="flex-shrink-0 mx-8" onClick={() => {
-            window.location.href = "/";
-          }}>
-          <Image
-            src={"/important/logo.png"}
-            alt="logo"
-            width={100}
-            height={100}
-            className={`w-12 h-auto transition-all duration-300 ${
-              isScrolled ? "md:w-14" : "md:w-16"
-            }`}
-          />
-        </div>
-        
-        <div className="flex-1 flex justify-end">
-          <Navigation menuItems={navItems} index={1} align="end" />
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
+        {/* Brand */}
+        <Link
+          href="/"
+          aria-label="Ke halaman utama"
+          className="shrink-0 hover:cursor-pointer"
+        >
+          <BrandLogo className="w-10 sm:w-11" />
+        </Link>
+
+        {/* Desktop links */}
+        <ul className="hidden items-center gap-1 lg:flex">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors hover:cursor-pointer hover:text-blue-600",
+                    isActive ? "text-blue-600" : "text-slate-600"
+                  )}
+                >
+                  {link.title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* CTA + mobile trigger */}
+        <div className="flex items-center gap-2">
+          <Link
+            href={navCta.href}
+            className="hidden items-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:cursor-pointer hover:bg-blue-700 sm:inline-flex"
+          >
+            {navCta.title}
+          </Link>
+          <div className="lg:hidden">
+            <NavigationSheet />
+          </div>
         </div>
       </div>
-
-      {/* Mobile Navigation */}
-      <div className="h-full flex items-center justify-between lg:hidden px-4 sm:px-6 relative">
-          <div className="w-10 h-10"></div>
-        <div className="flex items-center justify-center">
-          <Image
-            src={"/important/logo.png"}
-            alt="logo"
-            width={100}
-            height={100}
-            className={`h-auto transition-all duration-300 ${isScrolled ? "w-14 md:w-16" : "w-12 md:w-12"}`}
-          />
-        </div>
-        
-        <div className="w-10 h-10">
-          <NavigationSheet />
-        </div>
-
-      </div>
-    </motion.nav>
+    </header>
   );
 };
 
 export default Navbar;
-
-
-

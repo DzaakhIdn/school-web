@@ -9,19 +9,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Image from "next/image";
-import { Montserrat } from "next/font/google";
+import { montserrat } from "@/lib/fonts";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
+import { cn } from "@/lib/utils";
+
 
 type ModalDialogImageProps = {
   image_triger: string;
   image: string;
   title: string;
   description: string;
+  /** Class tambahan untuk gambar trigger (mis. efek zoom saat hover). */
+  imageClassName?: string;
 };
 
 export function ModalDialogImage({
@@ -29,6 +28,7 @@ export function ModalDialogImage({
   image,
   title,
   description,
+  imageClassName,
 }: ModalDialogImageProps) {
   return (
     <AlertDialog>
@@ -40,7 +40,10 @@ export function ModalDialogImage({
             width={1200}
             height={1200}
             quality={100}
-            className="w-full h-full object-cover"
+            className={cn(
+              "w-full h-full object-cover",
+              imageClassName
+            )}
           />
           <div className=" absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           {/* Title overlay */}

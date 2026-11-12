@@ -1,6 +1,6 @@
 "use client";
 
-import { Space_Grotesk, Montserrat, Raleway } from "next/font/google";
+import { spaceGrotesk, montserrat, raleway } from "@/lib/fonts";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -15,20 +15,8 @@ import {
 import Link from "next/link";
 import { useState, useLayoutEffect } from "react";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
-const raleway = Raleway({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
 interface CabangData {
   id: string;

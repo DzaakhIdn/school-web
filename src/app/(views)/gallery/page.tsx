@@ -1,26 +1,18 @@
 "use client";
 
-import { Space_Grotesk, Montserrat, Raleway } from "next/font/google";
+import { spaceGrotesk, montserrat, raleway } from "@/lib/fonts";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useState, useLayoutEffect } from "react";
 import Link from "next/link";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+import AuroraBackground from "@/components/ui/aurora-background";
+import YoutubeVideo from "@/components/ui/youtube-video";
+import BentoGallery from "@/(sections)/(gallery_sections)/Bento_Sect/bento-sect";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
-const raleway = Raleway({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
+
 
 type LocationFilter = "all" | "ikhwan" | "akhwat";
 
@@ -255,31 +247,57 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl"></div>
+      <section className="relative overflow-hidden bg-white px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-20">
+        {/* efek aurora di belakang konten */}
+        <AuroraBackground />
+
+        <div className="relative mx-auto max-w-4xl text-center">
+          <motion.span
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className={`${spaceGrotesk.className} inline-flex items-center gap-2 rounded-full border border-blue-300 bg-blue-50 px-4 py-2 text-[13px] font-medium text-blue-600`}
+          >
+            Galeri
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.05 }}
+            className={`${spaceGrotesk.className} mt-5 text-3xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl`}
+          >
+            Jelajahi Kehidupan Kampus Kami
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+            className={`${montserrat.className} mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base`}
+          >
+            Sekilas tentang kelas, kegiatan, acara, dan momen belajar sehari-hari
+            di HSI Boarding School.
+          </motion.p>
         </div>
 
+        {/* Kartu video — embed YouTube (autoplay muted) */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto text-center relative z-10"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="mx-auto mt-12 max-w-6xl sm:mt-14"
         >
-          <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl mb-4`}>
-            <p>{`< Galeri Kegiatan />`}</p>
-          </div>
-          <h1
-            className={`${raleway.className} font-extrabold text-4xl sm:text-5xl md:text-6xl text-blue-600 mb-6 leading-tight`}
-          >
-            Momen Berharga HSIBS
-          </h1>
-          <p className={`${montserrat.className} text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto`}>
-            Kumpulan kenangan indah dari berbagai kegiatan dan acara santri HSI Boarding School
-          </p>
+          <YoutubeVideo
+            videoId="3tWGITKsc1M"
+            title="Tur_virtual kampus HSI Boarding School"
+            poster="/assets/gallery/img-2.jpg"
+          />
         </motion.div>
       </section>
+
+      {/* BENTO GALLERY SECTION */}
+      <BentoGallery />
 
       {/* FILTER SECTION */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-gray-200">

@@ -2,22 +2,14 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
-import { Space_Grotesk, Montserrat } from "next/font/google";
+import { spaceGrotesk, montserrat } from "@/lib/fonts";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 
 gsap.registerPlugin(TextPlugin);
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
 export default function NotFound() {
   const containerRef = useRef<HTMLDivElement>(null);

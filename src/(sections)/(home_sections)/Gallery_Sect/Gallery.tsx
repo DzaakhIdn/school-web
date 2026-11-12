@@ -1,186 +1,168 @@
 "use client";
 
-import { Space_Grotesk, Montserrat } from "next/font/google";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { spaceGrotesk, montserrat } from "@/lib/fonts";
 import { motion } from "framer-motion";
+import {
+  HeartHandshake,
+  Maximize2,
+  Mountain,
+  PartyPopper,
+  Presentation,
+  ShieldCheck,
+  Sparkles,
+  Trophy,
+  Users,
+} from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import { ModalDialogImage } from "@/components/alert/modal_dialog";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["700"] });
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "600", "700", "800"] });
 
-const data = [
-  { img: "img-1.jpg", title: "Lomba Agustusan", desc: "Keseruan santri merayakan kemerdekaan." },
-  { img: "img-2.jpg", title: "Momen Juara", desc: "Semangat kompetisi yang sportif dan religius." },
-  { img: "img-3.jpg", title: "Outbond Seru", desc: "Membangun kerjasama tim di alam terbuka." },
-  { img: "img-4.jpg", title: "Eksplorasi Alam", desc: "Tadabbur alam untuk mengagumi ciptaan-Nya." },
-  { img: "img-5.jpg", title: "Bakti Sosial", desc: "Berbagi kebahagiaan dengan masyarakat sekitar." },
-  { img: "img-8.jpg", title: "Ukhuwah Islamiyah", desc: "Kebersamaan yang erat antar santri HSIBS." },
+
+/** Foto + keterangan dari data galeri lama (img-6/7 diberi judul sesuai isi foto). */
+const facilities = [
+  {
+    img: "img-1.jpg",
+    title: "Lomba Agustusan",
+    desc: "Keseruan santri merayakan kemerdekaan.",
+    icon: PartyPopper,
+  },
+  {
+    img: "img-2.jpg",
+    title: "Momen Juara",
+    desc: "Semangat kompetisi yang sportif dan religius.",
+    icon: Trophy,
+  },
+  {
+    img: "img-3.jpg",
+    title: "Outbond Seru",
+    desc: "Membangun kerjasama tim di alam terbuka.",
+    icon: Users,
+  },
+  {
+    img: "img-4.jpg",
+    title: "Eksplorasi Alam",
+    desc: "Tadabbur alam untuk mengagumi ciptaan-Nya.",
+    icon: Mountain,
+  },
+  {
+    img: "img-5.jpg",
+    title: "Bakti Sosial",
+    desc: "Berbagi kebahagiaan dengan masyarakat sekitar.",
+    icon: HeartHandshake,
+  },
+  {
+    img: "img-6.jpg",
+    title: "Sosialisasi & Seminar",
+    desc: "Materi edukatif bersama narasumber ahli.",
+    icon: Presentation,
+  },
+  {
+    img: "img-7.jpg",
+    title: "Simulasi Tanggap Darurat",
+    desc: "Praktik pemadaman api bersama petugas.",
+    icon: ShieldCheck,
+  },
+  {
+    img: "img-8.jpg",
+    title: "Ukhuwah Islamiyah",
+    desc: "Kebersamaan yang erat antar santri HSIBS.",
+    icon: Sparkles,
+  },
 ];
 
-export default function Gallery() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [current, setCurrent] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+const entrance = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.6, delay, ease: "easeOut" as const },
+});
 
-  useLayoutEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Auto-play carousel - only on client
-  useEffect(() => {
-    if (!isMounted || !autoPlay) return;
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev === data.length - 1 ? 0 : prev + 1));
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [autoPlay, isMounted]);
-
-  const nextSlide = () => {
-    setCurrent((prev) => (prev === data.length - 1 ? 0 : prev + 1));
-    setAutoPlay(false);
-  };
-
-  const prevSlide = () => {
-    setCurrent((prev) => (prev === 0 ? data.length - 1 : prev - 1));
-    setAutoPlay(false);
-  };
-
+/**
+ * Grid foto fasilitas & kegiatan — klik foto membuka lightbox (ModalDialogImage).
+ * Aturan radius konsentris: kartu 20px = padding 8px + foto 12px.
+ */
+const Gallery = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden w-full" suppressHydrationWarning>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl lg:text-2xl mb-3`}>
-            {`< Kegiatan Seru Santri />`}
-          </div>
-          <h2 className={`${montserrat.className} font-extrabold text-3xl sm:text-4xl md:text-5xl text-blue-600`}>
-            Keseruan Santri HSIBS
+    <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header section */}
+        <motion.div {...entrance(0)} className="mx-auto max-w-2xl text-center">
+          <h2
+            className={cn(
+              "text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl",
+              spaceGrotesk.className
+            )}
+          >
+            Fasilitas &amp; Kegiatan Santri
           </h2>
+          <p
+            className={cn(
+              "mt-3 text-sm leading-relaxed text-slate-600 sm:text-base",
+              montserrat.className
+            )}
+          >
+            Suasana belajar dan beraktivitas di HSI Boarding School — klik foto
+            untuk melihat lebih dekat.
+          </p>
         </motion.div>
 
-        {/* Main Gallery */}
-        <div className="space-y-8">
-          {/* Main Image */}
-          <motion.div
-            key={`main-${current}`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
-            onMouseEnter={() => setAutoPlay(false)}
-            onMouseLeave={() => setAutoPlay(true)}
-          >
-            <ModalDialogImage
-              image_triger={`/assets/gallery/${data[current].img}`}
-              image={`/assets/gallery/${data[current].img}`}
-              title={data[current].title}
-              description={data[current].desc}
-            />
-            
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            
-            {/* Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
-              <motion.h3 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className={`${montserrat.className} text-2xl sm:text-3xl md:text-4xl font-bold mb-2`}
+        {/* Grid kartu foto (2 baris × 4 kolom seperti mockup) */}
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 sm:gap-6 lg:mt-14 lg:grid-cols-4">
+          {facilities.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.img}
+                {...entrance(0.1 + (index % 4) * 0.08)}
+                className="group rounded-[20px] bg-slate-100 p-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
               >
-                {data[current].title}
-              </motion.h3>
-              <motion.p 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-sm sm:text-base text-gray-200"
-              >
-                {data[current].desc}
-              </motion.p>
-            </div>
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                  <ModalDialogImage
+                    image_triger={`/assets/gallery/${item.img}`}
+                    image={`/assets/gallery/${item.img}`}
+                    title={item.title}
+                    description={item.desc}
+                    imageClassName="transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
 
-            {/* Navigation Buttons */}
-            <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-4 sm:px-6 z-20">
-              <button 
-                onClick={prevSlide}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full p-2 sm:p-3 transition-all active:scale-90 border border-white/30"
-                aria-label="Previous slide"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-              </button>
-              <button 
-                onClick={nextSlide}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full p-2 sm:p-3 transition-all active:scale-90 border border-white/30"
-                aria-label="Next slide"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-              </button>
-            </div>
-          </motion.div>
+                  {/* overlay gelap + tombol perbesar saat hover */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-950/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="pointer-events-none absolute right-3 top-3 grid size-8 place-items-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:opacity-100">
+                    <Maximize2 className="size-4" aria-hidden />
+                  </span>
 
-          {/* Thumbnail Grid */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-4">
-            {data.map((item, index) => (
-              <motion.button
-                key={index}
-                onClick={() => {
-                  setCurrent(index);
-                  setAutoPlay(false);
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`relative h-20 sm:h-24 md:h-28 rounded-lg overflow-hidden transition-all duration-300 ${
-                  current === index 
-                    ? "ring-2 sm:ring-4 ring-blue-600 shadow-lg" 
-                    : "ring-1 ring-gray-200 hover:ring-gray-300"
-                }`}
-              >
-                <ModalDialogImage
-                  image_triger={`/assets/gallery/${item.img}`}
-                  image={`/assets/gallery/${item.img}`}
-                  title={item.title}
-                  description={item.desc}
-                />
-                
-                {/* Overlay for inactive thumbnails */}
-                {current !== index && (
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
-                )}
-              </motion.button>
-            ))}
-          </div>
+                  {/* badge ikon kategori */}
+                  <span className="pointer-events-none absolute bottom-3 left-3 grid size-10 place-items-center rounded-xl bg-white text-blue-600 shadow-md ring-1 ring-slate-900/5">
+                    <Icon className="size-5" aria-hidden />
+                  </span>
+                </div>
 
-          {/* Progress Indicators */}
-          <div className="flex justify-center items-center gap-2">
-            <span className={`${montserrat.className} text-sm font-medium text-gray-600`}>
-              {current + 1} / {data.length}
-            </span>
-            <div className="flex gap-1.5">
-              {data.map((_, i) => (
-                <motion.button
-                  key={i}
-                  onClick={() => {
-                    setCurrent(i);
-                    setAutoPlay(false);
-                  }}
-                  animate={{
-                    width: current === i ? 24 : 8,
-                    backgroundColor: current === i ? "#2563eb" : "#e5e7eb"
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="h-2 rounded-full transition-all"
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
+                <div className="px-3 pb-3 pt-4">
+                  <h3
+                    className={cn(
+                      "text-sm font-semibold text-slate-900 transition-colors duration-300 group-hover:text-blue-600",
+                      spaceGrotesk.className
+                    )}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className={cn(
+                      "mt-1 text-xs leading-relaxed text-slate-500",
+                      montserrat.className
+                    )}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Gallery;

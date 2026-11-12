@@ -2,18 +2,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Wrench, Clock, Home } from "lucide-react";
 import { BackgroundPattern } from "@/components/Hero/background-pattern";
 import { motion } from "framer-motion";
-import { Montserrat, Space_Grotesk } from "next/font/google";
+import { montserrat, spaceGrotesk } from "@/lib/fonts";
 import Link from "next/link";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 const Maintenance = ({ title }: { title: string }) => {
   return (

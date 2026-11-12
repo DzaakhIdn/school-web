@@ -1,101 +1,88 @@
-import { Space_Grotesk, Montserrat } from "next/font/google";
-import ScrollReveal from "@/animate/ScrollReveal";
+"use client";
+
+import { spaceGrotesk, montserrat } from "@/lib/fonts";
+import { motion } from "framer-motion";
 import CountUp from "@/animate/CountUp";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+import { cn } from "@/lib/utils";
+
+
+
+/** Statistik real dari data lama section (tanpa tambahan angkarangan). */
+const stats = [
+  { value: 150, label: "Santri Aktif" },
+  { value: 25, label: "Guru Berpengalaman" },
+  { value: 8, label: "Program Unggulan" },
+  { value: 2020, label: "Tahun Berdiri" },
+];
+
+const entrance = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.6, delay, ease: "easeOut" as const },
 });
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-export default function Stats() {
+/**
+ * Section statistik: panel gelap dengan pola lingkaran konsentris (ripple)
+ * memakai repeating-radial-gradient murni CSS — tanpa aset/gambar.
+ */
+const Stats = () => {
   return (
-    <>
-      <div className="md:mt-24 lg:mt-32 flex items-center justify-center flex-col transition-all duration-300 py-12 sm:py-16 md:py-20">
-        <div className="my-8 sm:my-10 lg:my-0 lg:mb-10 flex flex-col justify-center px-4 sm:px-6 lg:px-8 items-center gap-3 md:gap-4 max-w-6xl w-full mx-auto">
-          <div
-            className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl lg:text-3xl`}
-          >
-            <p>{`< HSI dalam Angka />`}</p>
-          </div>
-          <div
-            className={`${montserrat.className} text-center font-extrabold tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl text-blue-500`}
-          >
-            <ScrollReveal
-             baseOpacity={0}
-              enableBlur={true}
-              baseRotation={5}
-              blurStrength={15}
+    <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          {...entrance(0)}
+          className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16"
+          style={{
+            backgroundImage:
+              "repeating-radial-gradient(circle at 50% 42%, #101010 0px, #101010 44px, #1c1c1c 44px, #1c1c1c 88px)",
+          }}
+        >
+          <div className="relative mx-auto max-w-2xl text-center">
+            <h2
+              className={cn(
+                "text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl",
+                spaceGrotesk.className
+              )}
             >
-              Angka yang Bercerita Tentang Dedikasi Kami
-            </ScrollReveal>
+              Angka yang bercerita tentang{" "}
+              <span className="text-blue-400">dedikasi kami</span>
+            </h2>
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto">
-          <StatCard
-            title="Santri Aktif"
-            value={150}
-            desc="Menempuh pendidikan terpadu: diniyyah, formal, tahfidz, dan life skills."
-          />
-          <StatCard
-            title="Guru Berpengalaman"
-            value={25}
-            desc="Tenaga pengajar profesional dengan dedikasi tinggi untuk pendidikan santri."
-          />
-          <StatCard
-            title="Program Unggulan"
-            value={8}
-            desc="Program pendidikan terintegrasi yang mengembangkan potensi santri secara optimal."
-          />
-          <StatCard
-            title="Tahun Berdiri"
-            value={2020}
-            desc="Pengalaman dalam membentuk generasi Qurani yang berakhlak mulia."
-          />
-        </div>
+
+          <div className="relative mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:mt-14 lg:grid-cols-4">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                {...entrance(0.15 + index * 0.08)}
+                className="rounded-2xl bg-white/[0.06] px-4 py-7 text-center ring-1 ring-white/10 transition-colors duration-300 hover:bg-white/[0.09] sm:py-9"
+              >
+                <CountUp
+                  to={stat.value}
+                  from={0}
+                  direction="up"
+                  duration={2}
+                  className={cn(
+                    "text-3xl font-bold text-white sm:text-4xl lg:text-[2.75rem] lg:leading-none",
+                    spaceGrotesk.className
+                  )}
+                />
+                <p
+                  className={cn(
+                    "mt-3 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 sm:text-xs",
+                    montserrat.className
+                  )}
+                >
+                  {stat.label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
-    </>
-  );
-}
-
-const StatCard = ({
-  title,
-  value,
-  desc,
-}: {
-  title: string;
-  value: number;
-  desc: string;
-}) => {
-  return (
-    <div className="group relative w-full bg-white dark:bg-slate-900 rounded-lg md:rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-lg hover:cursor-pointer">
-      <div className="relative flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-8 text-center space-y-3 sm:space-y-4">
-        <h3
-          className={`${montserrat.className} text-sm sm:text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}
-        >
-          {title}
-        </h3>
-
-        <div className="relative">
-          <CountUp
-            to={value}
-            from={0}
-            direction="up"
-            duration={2}
-            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl ${spaceGrotesk.className} font-bold text-blue-600 dark:text-blue-400`}
-          />
-        </div>
-
-        <p
-          className={`${montserrat.className} text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs`}
-        >
-          {desc}
-        </p>
-      </div>
-    </div>
+    </section>
   );
 };
+
+export default Stats;
