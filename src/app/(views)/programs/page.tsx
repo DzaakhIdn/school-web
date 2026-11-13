@@ -1,45 +1,45 @@
 "use client";
 
-import { spaceGrotesk, montserrat, raleway } from "@/lib/fonts";
+import { spaceGrotesk, montserrat } from "@/lib/fonts";
+import Image from "next/image";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  ChevronDown,
-  BookOpen,
-  Globe,
-  Heart,
-  Medal,
-  BarChart3,
-  Feather,
-  Code2,
-  Users,
-  Lightbulb,
-  Clock,
   Award,
+  BarChart3,
+  BookOpen,
+  Clock,
+  Code2,
+  Feather,
+  Globe,
+  GraduationCap,
+  Heart,
+  Lightbulb,
+  Medal,
+  Target,
+  Users,
+  type LucideIcon,
 } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+import AuroraBackground from "@/components/ui/aurora-background";
 
-
-
-// Icon mapping
-const iconMap: { [key: string]: React.ReactNode } = {
-  book: <BookOpen className="w-5 h-5" />,
-  language: <Globe className="w-5 h-5" />,
-  hafalan: <Heart className="w-5 h-5" />,
-  islam: <Medal className="w-5 h-5" />,
-  fiqh: <BarChart3 className="w-5 h-5" />,
-  hadits: <Feather className="w-5 h-5" />,
-  code: <Code2 className="w-5 h-5" />,
-  app: <Users className="w-5 h-5" />,
-  mindset: <Lightbulb className="w-5 h-5" />,
-  time: <Clock className="w-5 h-5" />,
-  globe: <Globe className="w-5 h-5" />,
-  award: <Award className="w-5 h-5" />,
+const iconMap: Record<string, LucideIcon> = {
+  book: BookOpen,
+  language: Globe,
+  hafalan: Heart,
+  islam: Medal,
+  fiqh: BarChart3,
+  hadits: Feather,
+  code: Code2,
+  app: Users,
+  mindset: Lightbulb,
+  time: Clock,
+  globe: Globe,
+  award: Award,
 };
 
-function getIcon(iconType: string): React.ReactNode {
-  return iconMap[iconType] || iconMap["book"];
-}
+const getIcon = (iconType: string): LucideIcon => iconMap[iconType] ?? BookOpen;
 
 type ProgramId = "k10" | "k11" | "k12";
 
@@ -66,8 +66,6 @@ interface Output {
 
 interface ClassProgram {
   id: ProgramId;
-  color: string;
-  colorBg: string;
   grade: string;
   phase: string;
   description: string;
@@ -79,8 +77,6 @@ interface ClassProgram {
 const programs: ClassProgram[] = [
   {
     id: "k10",
-    color: "yellow",
-    colorBg: "from-yellow-50 to-orange-50",
     grade: "Kelas 10",
     phase: "Fase Akuisisi Fundamental",
     description:
@@ -151,8 +147,6 @@ const programs: ClassProgram[] = [
   },
   {
     id: "k11",
-    color: "blue",
-    colorBg: "from-blue-50 to-indigo-50",
     grade: "Kelas 11",
     phase: "Fase Eskalasi & Transisi",
     description:
@@ -216,8 +210,6 @@ const programs: ClassProgram[] = [
   },
   {
     id: "k12",
-    color: "red",
-    colorBg: "from-red-50 to-pink-50",
     grade: "Kelas 12",
     phase: "Fase Aplikasi — Bahasa Melebur Menjadi Alat",
     description:
@@ -277,184 +269,347 @@ const programs: ClassProgram[] = [
   },
 ];
 
-export default function ProgramsPage() {
-  const [expandedClass, setExpandedClass] = useState<ProgramId>("k10");
-  const [expandedSemester, setExpandedSemester] = useState<number>(0);
-  const [expandedOutput, setExpandedOutput] = useState<boolean>(false);
+/** Empat pilar kurikulum (gambar di /public/assets/programs_card). */
+const pillars = [
+  { title: "Al-Qur'an", caption: "Tahfidz & muroja'ah harian", image: "/assets/programs_card/quran.jpg" },
+  { title: "Diniyah", caption: "Aqidah, fiqh, hadits & mutun", image: "/assets/programs_card/kitab.jpg" },
+  { title: "Bahasa", caption: "Arab & Inggris aktif", image: "/assets/programs_card/bahasa.jpg" },
+  { title: "Teknologi", caption: "Web & software engineering", image: "/assets/programs_card/code.jpg" },
+];
 
-  const currentProgram = programs.find((p) => p.id === expandedClass);
+/**
+ * Warna tetap per mata pelajaran, supaya satu pelajaran selalu berwarna sama
+ * di semua grafik distribusi beban.
+ */
+const subjectColors: Record<string, string> = {
+  Tahfidz: "bg-emerald-500",
+  Hafalan: "bg-emerald-500",
+  "Bahasa Inggris": "bg-blue-500",
+  IT: "bg-indigo-500",
+  Fiqh: "bg-amber-400",
+  Aqidah: "bg-teal-500",
+  Tahajji: "bg-lime-500",
+  Hadits: "bg-rose-400",
+  Agile: "bg-slate-400",
+  Sirah: "bg-orange-400",
+  Diniyah: "bg-cyan-500",
+  "Hifdzul Mutun": "bg-violet-500",
+  "HSI Akademik": "bg-sky-400",
+  Trilingual: "bg-pink-400",
+};
+
+const colorFor = (label: string) => subjectColors[label] ?? "bg-slate-300";
+
+/** Grafik batang bertumpuk + legenda persentase. */
+const DistributionBar = ({
+  items,
+  title,
+  compact = false,
+}: {
+  items: Distribution[];
+  title: string;
+  /** Legenda 2 kolom (untuk wadah sempit). */
+  compact?: boolean;
+}) => (
+  <div>
+    <p
+      className={`${montserrat.className} mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500`}
+    >
+      {title}
+    </p>
+    <div
+      className="flex h-3 w-full gap-0.5 overflow-hidden rounded-full bg-slate-100"
+      role="img"
+      aria-label={`${title}: ${items.map((i) => `${i.label} ${i.percentage}%`).join(", ")}`}
+    >
+      {items.map((item, index) => (
+        <motion.span
+          key={item.label}
+          initial={{ width: 0 }}
+          animate={{ width: `${item.percentage}%` }}
+          transition={{ duration: 0.7, delay: index * 0.05, ease: "easeOut" }}
+          className={cn("h-full first:rounded-l-full", colorFor(item.label))}
+        />
+      ))}
+    </div>
+    <ul
+      className={cn(
+        "mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5",
+        !compact && "sm:grid-cols-3"
+      )}
+    >
+      {items.map((item) => (
+        <li
+          key={item.label}
+          className={`${montserrat.className} flex items-center gap-2 text-xs text-slate-600`}
+        >
+          <span className={cn("size-2 shrink-0 rounded-full", colorFor(item.label))} />
+          <span className="truncate">{item.label}</span>
+          <span className="ml-auto font-semibold tabular-nums text-slate-900">
+            {item.percentage}%
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+export default function ProgramsPage() {
+  const [activeId, setActiveId] = useState<ProgramId>("k10");
+  const program = programs.find((p) => p.id === activeId) ?? programs[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12 sm:mb-16 space-y-4">
-          <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl`}>
-            <p>{`< Program Pembelajaran />`}</p>
-          </div>
-          <h1 className={`${raleway.className} font-extrabold text-3xl sm:text-4xl md:text-5xl text-blue-600`}>
+    <div className="min-h-screen bg-white">
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-white px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-16">
+        <AuroraBackground />
+
+        <div className="relative mx-auto max-w-4xl text-center">
+          <motion.span
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className={`${spaceGrotesk.className} inline-flex items-center gap-2 rounded-full border border-blue-300 bg-blue-50 px-4 py-2 text-[13px] font-medium text-blue-600`}
+          >
+            <GraduationCap className="size-3.5" aria-hidden />
+            Program Pembelajaran
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.05 }}
+            className={`${spaceGrotesk.className} mt-5 text-3xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl`}
+          >
             Kurikulum Holistik HSIBS
-          </h1>
-          <p className={`${montserrat.className} text-slate-600 text-base sm:text-lg max-w-3xl mx-auto`}>
-            Perjalanan 3 Tahun Membentuk Generasi Unggul dengan Integrasi Sempurna antara Aqidah, Hafalan, Akhlak, Bahasa & Teknologi
-          </p>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+            className={`${montserrat.className} mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base`}
+          >
+            Perjalanan 3 tahun membentuk generasi unggul — memadukan aqidah,
+            hafalan, akhlak, bahasa, dan teknologi.
+          </motion.p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-12 sm:mb-16">
-          {programs.map((program) => (
-            <motion.button
-              key={program.id}
-              onClick={() => {
-                setExpandedClass(program.id);
-                setExpandedSemester(0);
-              }}
-              className={`px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-sm sm:text-base transition-all duration-300 ${
-                expandedClass === program.id
-                  ? `bg-gradient-to-r ${program.colorBg} text-slate-900 border-2 border-${program.color}-500 shadow-lg`
-                  : "bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+        {/* Empat pilar */}
+        <div className="relative mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {pillars.map((pillar, index) => (
+            <motion.div
+              key={pillar.title}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 + index * 0.07 }}
+              className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-slate-100 sm:aspect-[4/4.5]"
             >
-              {program.grade}
-            </motion.button>
+              <Image
+                src={pillar.image}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 1024px) 50vw, 280px"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                <p
+                  className={`${spaceGrotesk.className} text-lg font-bold leading-tight text-white sm:text-xl`}
+                >
+                  {pillar.title}
+                </p>
+                <p className={`${montserrat.className} mt-1 text-xs text-white/80 sm:text-sm`}>
+                  {pillar.caption}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
+      </section>
 
-        {/* Content */}
-        {currentProgram && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-8">
-            {/* Phase */}
-            <div className={`bg-gradient-to-r ${currentProgram.colorBg} rounded-2xl p-6 sm:p-8 border-2`}>
-              <h2 className={`${raleway.className} font-bold text-xl sm:text-2xl text-slate-800 mb-3`}>{currentProgram.phase}</h2>
-              <p className={`${montserrat.className} text-slate-700 text-sm sm:text-base leading-relaxed`}>{currentProgram.description}</p>
-            </div>
-
-            {/* Semesters */}
-            <div className="space-y-4">
-              {currentProgram.semesters.map((semester, idx) => (
-                <motion.div key={idx} className="border-2 border-slate-200 rounded-xl overflow-hidden">
-                  <button
-                    onClick={() => setExpandedSemester(expandedSemester === idx ? -1 : idx)}
-                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 sm:p-6 flex items-center justify-between"
-                  >
-                    <h3 className={`${raleway.className} font-bold text-lg sm:text-xl`}>{semester.name}</h3>
-                    <ChevronDown className={`w-6 h-6 transition-transform ${expandedSemester === idx ? "rotate-180" : ""}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {expandedSemester === idx && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="bg-white p-6 sm:p-8 space-y-6"
-                      >
-                        {/* Subjects */}
-                        <div className="space-y-3">
-                          {semester.subjects.map((subject, subIdx) => (
-                            <div key={subIdx} className="flex gap-3 sm:gap-4 items-start">
-                              <div className="flex-shrink-0 text-blue-500 mt-1">{getIcon(subject.iconType)}</div>
-                              <p className={`${montserrat.className} text-slate-700 text-sm sm:text-base`}>{subject.name}</p>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Distribution */}
-                        <div className="pt-6 border-t border-slate-200">
-                          <h4 className={`${raleway.className} font-bold text-slate-800 mb-4`}>Distribusi Beban</h4>
-                          <div className="space-y-2">
-                            {semester.distribution.map((item, distIdx) => (
-                              <div key={distIdx} className="space-y-1">
-                                <div className="flex justify-between text-xs sm:text-sm">
-                                  <span className={`${montserrat.className} text-slate-700 font-semibold`}>{item.label}</span>
-                                  <span className={`${montserrat.className} text-blue-600 font-bold`}>{item.percentage}%</span>
-                                </div>
-                                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${item.percentage}%` }}
-                                    transition={{ delay: distIdx * 0.1, duration: 0.8 }}
-                                    className="bg-gradient-to-r from-blue-400 to-blue-600 h-full rounded-full"
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Outputs */}
-            <motion.div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 overflow-hidden">
-              <button
-                onClick={() => setExpandedOutput(!expandedOutput)}
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white p-4 sm:p-6 flex items-center justify-between"
-              >
-                <h3 className={`${raleway.className} font-bold text-lg sm:text-xl`}>Output {currentProgram.grade}</h3>
-                <ChevronDown className={`w-6 h-6 transition-transform ${expandedOutput ? "rotate-180" : ""}`} />
-              </button>
-
-              <AnimatePresence>
-                {expandedOutput && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-6 sm:p-8 space-y-4"
-                  >
-                    {/* Outputs List */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                      {currentProgram.outputs.map((output, outIdx) => (
-                        <motion.div
-                          key={outIdx}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: outIdx * 0.1 }}
-                          className="flex gap-2 items-start"
-                        >
-                          <div className="text-blue-500 flex-shrink-0 mt-1">{getIcon(output.icon)}</div>
-                          <p className={`${montserrat.className} text-slate-700 text-sm sm:text-base`}>{output.text}</p>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    {/* Year Distribution */}
-                    <div className="pt-6 border-t border-blue-200">
-                      <h4 className={`${raleway.className} font-bold text-slate-800 mb-4`}>Total Beban Setahun</h4>
-                      <div className="space-y-2">
-                        {currentProgram.yearDistribution.map((item, yearIdx) => (
-                          <div key={yearIdx} className="space-y-1">
-                            <div className="flex justify-between text-xs sm:text-sm">
-                              <span className={`${montserrat.className} text-slate-700 font-semibold`}>{item.label}</span>
-                              <span className={`${montserrat.className} text-blue-600 font-bold`}>{item.percentage}%</span>
-                            </div>
-                            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${item.percentage}%` }}
-                                transition={{ delay: yearIdx * 0.1, duration: 0.8 }}
-                                className="bg-gradient-to-r from-blue-400 to-indigo-600 h-full rounded-full"
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+      {/* PERJALANAN 3 TAHUN */}
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 max-w-2xl"
+          >
+            <h2
+              className={`${spaceGrotesk.className} text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl`}
+            >
+              Perjalanan 3 Tahun
+            </h2>
+            <p
+              className={`${montserrat.className} mt-3 text-sm leading-relaxed text-slate-600 sm:text-base`}
+            >
+              Pilih jenjang untuk melihat fokus, mata pelajaran, dan target
+              akhirnya.
+            </p>
           </motion.div>
-        )}
-      </div>
+
+          {/* Stepper jenjang */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3" role="tablist">
+            {programs.map((item, index) => {
+              const isActive = item.id === activeId;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveId(item.id)}
+                  className={cn(
+                    "relative overflow-hidden rounded-2xl border p-3 text-left transition hover:cursor-pointer sm:p-5",
+                    isActive
+                      ? "border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      : "border-slate-200 bg-white text-slate-900 hover:border-blue-300"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      spaceGrotesk.className,
+                      "text-xs font-semibold sm:text-sm",
+                      isActive ? "text-blue-100" : "text-blue-600"
+                    )}
+                  >
+                    0{index + 1}
+                  </span>
+                  <p
+                    className={`${spaceGrotesk.className} mt-1 text-base font-bold leading-tight sm:text-xl`}
+                  >
+                    {item.grade}
+                  </p>
+                  <p
+                    className={cn(
+                      montserrat.className,
+                      "mt-1 hidden text-xs leading-snug sm:line-clamp-2 sm:block",
+                      isActive ? "text-blue-100" : "text-slate-500"
+                    )}
+                  >
+                    {item.phase}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={program.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+              className="mt-6 space-y-4 sm:mt-8"
+            >
+              {/* Fokus fase */}
+              <div className="rounded-3xl bg-white p-6 ring-1 ring-slate-200/70 sm:p-8">
+                <p
+                  className={`${montserrat.className} text-xs font-semibold uppercase tracking-wide text-blue-600`}
+                >
+                  {program.grade}
+                </p>
+                <h3
+                  className={`${spaceGrotesk.className} mt-2 text-xl font-bold leading-tight text-slate-900 sm:text-2xl`}
+                >
+                  {program.phase}
+                </h3>
+                <p
+                  className={`${montserrat.className} mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-base`}
+                >
+                  {program.description}
+                </p>
+              </div>
+
+              {/* Dua semester berdampingan */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                {program.semesters.map((semester) => (
+                  <div
+                    key={semester.name}
+                    className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-slate-200/70 sm:p-7"
+                  >
+                    <h4
+                      className={`${spaceGrotesk.className} text-lg font-bold capitalize text-slate-900`}
+                    >
+                      {semester.name.toLowerCase()}
+                    </h4>
+
+                    <ul className="mt-4 space-y-2.5">
+                      {semester.subjects.map((subject) => {
+                        const Icon = getIcon(subject.iconType);
+                        return (
+                          <li key={subject.name} className="flex items-start gap-3">
+                            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-600">
+                              <Icon className="size-4" aria-hidden />
+                            </span>
+                            <span
+                              className={`${montserrat.className} pt-1.5 text-sm leading-snug text-slate-700`}
+                            >
+                              {subject.name}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+
+                    <div className="mt-6 border-t border-slate-100 pt-5 lg:mt-auto">
+                      <DistributionBar items={semester.distribution} title="Distribusi beban" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Target akhir + beban setahun */}
+              <div className="grid gap-4 rounded-3xl bg-blue-600 p-6 text-white sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:gap-8">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Target className="size-5 text-blue-200" aria-hidden />
+                    <h4 className={`${spaceGrotesk.className} text-lg font-bold sm:text-xl`}>
+                      Target Akhir {program.grade}
+                    </h4>
+                  </div>
+                  <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                    {program.outputs.map((output, index) => {
+                      const Icon = getIcon(output.icon);
+                      return (
+                        <motion.li
+                          key={output.text}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 + index * 0.05 }}
+                          className="flex items-center gap-3 rounded-2xl bg-white/10 p-3"
+                        >
+                          <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-white text-blue-600">
+                            <Icon className="size-4" aria-hidden />
+                          </span>
+                          <span
+                            className={`${montserrat.className} text-sm font-medium leading-snug`}
+                          >
+                            {output.text}
+                          </span>
+                        </motion.li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                <div className="self-start rounded-2xl bg-white p-5 text-slate-900">
+                  <DistributionBar
+                    items={program.yearDistribution}
+                    title="Total beban setahun"
+                    compact
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
     </div>
   );
 }

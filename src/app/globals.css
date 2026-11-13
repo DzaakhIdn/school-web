@@ -215,3 +215,14 @@
 }
 
 
+
+/* mapcn: tooltip marker tanpa kotak/ekor bawaan popup MapLibre */
+.maplibregl-popup-content {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.maplibregl-popup-tip {
+  display: none;
+}

@@ -1,429 +1,565 @@
 "use client";
 
-import { spaceGrotesk, montserrat, raleway } from "@/lib/fonts";
-import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { useState, type FormEvent } from "react";
+import { motion } from "framer-motion";
 import {
-  Mail,
-  Phone,
-  MapPin,
+  ArrowUpRight,
+  Check,
   Clock,
+  Copy,
+  Headset,
   Instagram,
   Linkedin,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
   Youtube,
-  ChevronDown,
+  type LucideIcon,
 } from "lucide-react";
-import Link from "next/link";
-import { useState, useLayoutEffect } from "react";
 
-
-
+import { cn } from "@/lib/utils";
+import { montserrat, spaceGrotesk } from "@/lib/fonts";
+import AuroraBackground from "@/components/ui/aurora-background";
 
 interface CabangData {
   id: string;
   nama: string;
+  kota: string;
+  provinsi: string;
   tipe: "ikhwan" | "akhwat";
   nomor: string;
   email: string;
-  icon: string;
-  color: string;
-  badgeColor: string;
+  image: string;
+  mapsLink: string;
 }
 
 interface SocialLink {
   name: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   link: string;
   username: string;
+  accent: string;
 }
+
+const EMAIL = "boardingschool@hsi.id";
+const MAIN_WA = "089524513151";
+const PSB_LINK = "https://psb.hsiboardingschool.id/auth/auth-user";
 
 const cabangData: CabangData[] = [
   {
     id: "sukabumi",
     nama: "HSI Boarding School Sukabumi",
+    kota: "Sukabumi",
+    provinsi: "Jawa Barat",
     tipe: "ikhwan",
     nomor: "089623039600",
-    email: "boardingschool@hsi.id",
-    icon: "🔷",
-    color: "green",
-    badgeColor: "bg-green-100 text-green-700",
+    email: EMAIL,
+    image: "/assets/location/sukabumi.jpg",
+    mapsLink: "https://maps.app.goo.gl/rTqp7sD5zuHQmyKJ8",
   },
   {
     id: "purworejo",
     nama: "HSI Boarding School Purworejo",
+    kota: "Purworejo",
+    provinsi: "Jawa Tengah",
     tipe: "ikhwan",
     nomor: "085126184921",
-    email: "boardingschool@hsi.id",
-    icon: "🔷",
-    color: "blue",
-    badgeColor: "bg-blue-100 text-blue-700",
+    email: EMAIL,
+    image: "/assets/location/purworejo.jpg",
+    mapsLink: "https://maps.app.goo.gl/aJNLHrHHsnefLFfk6",
   },
   {
     id: "bekasi",
     nama: "HSI Boarding School Bekasi",
+    kota: "Bekasi",
+    provinsi: "Jawa Barat",
     tipe: "akhwat",
     nomor: "089524513151",
-    email: "boardingschool@hsi.id",
-    icon: "💗",
-    color: "pink",
-    badgeColor: "bg-pink-100 text-pink-700",
+    email: EMAIL,
+    image: "/assets/location/bekasi.jpg",
+    mapsLink: "https://maps.app.goo.gl/1qtVUquDzGT5HPrt5",
   },
 ];
 
 const socialLinks: SocialLink[] = [
   {
     name: "Instagram",
-    icon: <Instagram className="w-6 h-6" />,
+    icon: Instagram,
     link: "https://instagram.com/hsiboardingschool",
     username: "@hsiboardingschool",
-  },
-  {
-    name: "LinkedIn",
-    icon: <Linkedin className="w-6 h-6" />,
-    link: "https://linkedin.com/company/hsi-boarding-school",
-    username: "HSI Boarding School",
+    accent: "bg-pink-50 text-pink-600",
   },
   {
     name: "YouTube",
-    icon: <Youtube className="w-6 h-6" />,
+    icon: Youtube,
     link: "https://youtube.com/@HSI-BOARDING-SCHOOL",
     username: "HSI BOARDING SCHOOL",
+    accent: "bg-red-50 text-red-600",
+  },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    link: "https://linkedin.com/company/hsi-boarding-school",
+    username: "HSI Boarding School",
+    accent: "bg-sky-50 text-sky-700",
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
+const topics = ["Pendaftaran", "Program", "Kunjungan", "Lainnya"] as const;
+
+/** "089524513151" → "6289524513151" */
+const toWa = (nomor: string) => `62${nomor.replace(/^0/, "")}`;
+
+/** "089524513151" → "+62 895-2451-3151" */
+const formatPhone = (nomor: string) => {
+  const n = nomor.replace(/^0/, "");
+  return `+62 ${n.slice(0, 3)}-${n.slice(3, 7)}-${n.slice(7)}`;
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8 },
-  },
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+};
+
+const SectionHeading = ({ title, subtitle }: { title: string; subtitle: string }) => (
+  <motion.div {...fadeUp} transition={{ duration: 0.6 }} className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+    <h2
+      className={cn(
+        spaceGrotesk.className,
+        "text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl lg:text-4xl"
+      )}
+    >
+      {title}
+    </h2>
+    <p className={cn(montserrat.className, "mt-3 text-sm leading-relaxed text-slate-600 sm:text-base")}>
+      {subtitle}
+    </p>
+  </motion.div>
+);
+
+const CopyButton = ({ value, label }: { value: string; label: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard tidak tersedia — abaikan */
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      aria-label={copied ? `${label} tersalin` : `Salin ${label}`}
+      className="grid size-9 shrink-0 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-blue-300 hover:text-blue-600"
+    >
+      {copied ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
+    </button>
+  );
 };
 
 export default function ContactPage() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [expandedCabang, setExpandedCabang] = useState<string | null>(null);
+  const [name, setName] = useState("");
+  const [cabangId, setCabangId] = useState(cabangData[0].id);
+  const [topic, setTopic] = useState<(typeof topics)[number]>("Pendaftaran");
+  const [message, setMessage] = useState("");
 
-  useLayoutEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const selectedCabang = cabangData.find((c) => c.id === cabangId) ?? cabangData[0];
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const text = [
+      "Assalamu'alaikum, admin HSI Boarding School.",
+      "",
+      `Nama: ${name.trim()}`,
+      `Kampus: ${selectedCabang.kota}`,
+      `Keperluan: ${topic}`,
+      "",
+      message.trim(),
+    ].join("\n");
+    window.open(
+      `https://wa.me/${toWa(selectedCabang.nomor)}?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+  const quickContacts = [
+    {
+      icon: Mail,
+      label: "Email",
+      value: EMAIL,
+      href: `mailto:${EMAIL}`,
+      copy: EMAIL,
+      accent: "bg-blue-50 text-blue-600",
+    },
+    {
+      icon: Phone,
+      label: "WhatsApp",
+      value: formatPhone(MAIN_WA),
+      href: `https://wa.me/${toWa(MAIN_WA)}`,
+      copy: formatPhone(MAIN_WA),
+      accent: "bg-green-50 text-green-600",
+    },
+    {
+      icon: Clock,
+      label: "Jam Operasional",
+      value: "Senin – Jumat, 07:30 – 17:00 WIB",
+      accent: "bg-amber-50 text-amber-600",
+    },
+  ];
+
+  const inputClass = cn(
+    montserrat.className,
+    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+  );
+  const labelClass = cn(montserrat.className, "mb-1.5 block text-xs font-semibold text-slate-600");
 
   return (
     <div className="min-h-screen bg-white">
-      {/* HERO SECTION */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        </div>
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-white px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-16">
+        <AuroraBackground />
 
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto text-center relative z-10"
-        >
-          <div className={`${spaceGrotesk.className} font-bold text-yellow-500 text-lg sm:text-xl md:text-2xl mb-4`}>
-            <p>{`< Hubungi Kami />`}</p>
-          </div>
-          <h1
-            className={`${raleway.className} font-extrabold text-4xl sm:text-5xl md:text-6xl text-blue-600 mb-6 leading-tight`}
+        <div className="relative mx-auto max-w-4xl text-center">
+          <motion.span
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className={`${spaceGrotesk.className} inline-flex items-center gap-2 rounded-full border border-blue-300 bg-blue-50 px-4 py-2 text-[13px] font-medium text-blue-600`}
+          >
+            <Headset className="size-3.5" aria-hidden />
+            Hubungi Kami
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.05 }}
+            className={`${spaceGrotesk.className} mt-5 text-3xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl`}
           >
             Siap Membantu Anda
-          </h1>
-          <p className={`${montserrat.className} text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto`}>
-            Hubungi kami untuk informasi pendaftaran, program pembelajaran, atau pertanyaan lainnya tentang HSI
-            Boarding School
-          </p>
-        </motion.div>
-      </section>
+          </motion.h1>
 
-      {/* QUICK CONTACT SECTION */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          <motion.p
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+            className={`${montserrat.className} mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base`}
           >
-            {/* Email */}
-            <motion.div
-              variants={itemVariants}
-              className="group relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:shadow-blue-200/50"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 text-blue-500">
-                  <Mail className="w-8 h-8" />
-                </div>
-                <div className="flex-1">
-                  <h3 className={`${raleway.className} font-bold text-lg text-blue-600 mb-2`}>Email</h3>
-                  <Link
-                    href="mailto:boardingschool@hsi.id"
-                    className="text-slate-700 hover:text-blue-600 transition-colors font-semibold"
-                  >
-                    boardingschool@hsi.id
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* WhatsApp */}
-            <motion.div
-              variants={itemVariants}
-              className="group relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200 hover:border-green-400 transition-all duration-300 hover:shadow-xl hover:shadow-green-200/50"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 text-green-500">
-                  <Phone className="w-8 h-8" />
-                </div>
-                <div className="flex-1">
-                  <h3 className={`${raleway.className} font-bold text-lg text-green-600 mb-2`}>WhatsApp</h3>
-                  <Link
-                    href="https://wa.me/6289524513151"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-slate-700 hover:text-green-600 transition-colors font-semibold"
-                  >
-                    +62 895-2451-3151
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Operating Hours */}
-            <motion.div
-              variants={itemVariants}
-              className="group relative bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-8 border-2 border-orange-200 hover:border-orange-400 transition-all duration-300 hover:shadow-xl hover:shadow-orange-200/50"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 text-orange-500">
-                  <Clock className="w-8 h-8" />
-                </div>
-                <div className="flex-1">
-                  <h3 className={`${raleway.className} font-bold text-lg text-orange-600 mb-2`}>Jam Operasional</h3>
-                  <p className={`${montserrat.className} text-slate-700 text-sm font-semibold`}>
-                    Senin - Jumat <br />
-                    07:30 - 17:00 WIB
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+            Punya pertanyaan seputar pendaftaran, program pembelajaran, atau kunjungan kampus? Tim kami siap
+            menjawab.
+          </motion.p>
         </div>
-      </section>
 
-      {/* CABANG CONTACT SECTION */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-50 to-white">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className={`${raleway.className} font-extrabold text-3xl sm:text-4xl md:text-5xl text-blue-600 mb-4`}>
-              Kontak Per Cabang
-            </h2>
-            <p className={`${montserrat.className} text-lg text-slate-600 max-w-3xl mx-auto`}>
-              Hubungi cabang terdekat untuk mendapatkan informasi lebih detail
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            {cabangData.map((cabang) => (
-              <motion.div key={cabang.id} variants={itemVariants}>
-                <button
-                  onClick={() => setExpandedCabang(expandedCabang === cabang.id ? null : cabang.id)}
-                  className={`w-full text-left p-6 sm:p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg ${
-                    expandedCabang === cabang.id
-                      ? `bg-gradient-to-r ${
-                          cabang.color === "green"
-                            ? "from-green-50 to-emerald-50 border-green-400"
-                            : cabang.color === "blue"
-                              ? "from-blue-50 to-indigo-50 border-blue-400"
-                              : "from-pink-50 to-rose-50 border-pink-400"
-                        }`
-                      : "bg-white border-gray-200 hover:border-blue-300"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <span className="text-3xl">{cabang.icon}</span>
-                      <div>
-                        <h3 className={`${raleway.className} font-bold text-lg sm:text-xl text-slate-800`}>
-                          {cabang.nama}
-                        </h3>
-                        <p className={`${montserrat.className} text-sm text-slate-500`}>
-                          {cabang.tipe === "ikhwan" ? "Santri Ikhwan" : "Santri Akhwat"}
-                        </p>
-                      </div>
-                    </div>
-                    <ChevronDown
-                      className={`w-6 h-6 text-slate-600 transition-transform duration-300 ${
-                        expandedCabang === cabang.id ? "rotate-180" : ""
-                      }`}
-                    />
-                  </div>
-                </button>
-
-                <AnimatePresence>
-                  {expandedCabang === cabang.id && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className={`overflow-hidden rounded-b-2xl border-2 border-t-0 border-${cabang.color}-400 bg-${cabang.color}-50 p-6 sm:p-8`}
+        {/* Kontak cepat */}
+        <div className="relative mx-auto mt-12 grid max-w-5xl gap-3 sm:gap-4 md:grid-cols-3">
+          {quickContacts.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 + index * 0.07 }}
+                className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur sm:p-5"
+              >
+                <span className={cn("grid size-11 shrink-0 place-items-center rounded-xl", item.accent)}>
+                  <Icon className="size-5" aria-hidden />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className={cn(montserrat.className, "text-xs font-medium text-slate-500")}>{item.label}</p>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      className={cn(
+                        spaceGrotesk.className,
+                        "block truncate text-[15px] font-semibold text-slate-900 hover:text-blue-600"
+                      )}
                     >
-                      <div className="space-y-4">
-                        {/* Phone */}
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                            <Phone className={`w-5 h-5 text-${cabang.color}-500`} />
-                          </div>
-                          <div className="flex-1">
-                            <p className={`${montserrat.className} text-xs font-semibold text-slate-500 uppercase`}>
-                              Nomor Telepon
-                            </p>
-                            <Link
-                              href={`https://wa.me/62${cabang.nomor.substring(1)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`text-lg font-bold text-${cabang.color}-600 hover:underline`}
-                            >
-                              {cabang.nomor}
-                            </Link>
-                          </div>
-                        </div>
-
-                        {/* Email */}
-                        <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                            <Mail className={`w-5 h-5 text-${cabang.color}-500`} />
-                          </div>
-                          <div className="flex-1">
-                            <p className={`${montserrat.className} text-xs font-semibold text-slate-500 uppercase`}>
-                              Email
-                            </p>
-                            <Link
-                              href={`mailto:${cabang.email}`}
-                              className={`text-lg font-bold text-${cabang.color}-600 hover:underline`}
-                            >
-                              {cabang.email}
-                            </Link>
-                          </div>
-                        </div>
-
-                        {/* WhatsApp CTA */}
-                        <Link
-                          href={`https://wa.me/62${cabang.nomor.substring(1)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 bg-green-500 hover:bg-green-600 mt-4 w-full`}
-                        >
-                          <Phone className="w-5 h-5" />
-                          Chat via WhatsApp
-                        </Link>
-                      </div>
-                    </motion.div>
+                      {item.value}
+                    </Link>
+                  ) : (
+                    <p className={cn(spaceGrotesk.className, "text-[15px] font-semibold text-slate-900")}>
+                      {item.value}
+                    </p>
                   )}
-                </AnimatePresence>
+                </div>
+                {item.copy && <CopyButton value={item.copy} label={item.label} />}
               </motion.div>
-            ))}
-          </motion.div>
+            );
+          })}
         </div>
       </section>
 
-      {/* SOCIAL MEDIA SECTION */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className={`${raleway.className} font-extrabold text-3xl sm:text-4xl md:text-5xl text-blue-600 mb-4`}>
-              Ikuti Media Sosial Kami
-            </h2>
-            <p className={`${montserrat.className} text-lg text-slate-600 max-w-3xl mx-auto`}>
-              Dapatkan update terbaru, tips, dan cerita inspiratif dari HSIBS
-            </p>
-          </motion.div>
+      {/* KONTAK PER KAMPUS */}
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeading
+            title="Kontak Per Kampus"
+            subtitle="Hubungi admin kampus terdekat untuk informasi yang lebih detail."
+          />
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8"
-          >
-            {socialLinks.map((social, idx) => (
-              <motion.div key={idx} variants={itemVariants}>
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
+            {cabangData.map((cabang, index) => (
+              <motion.article
+                key={cabang.id}
+                {...fadeUp}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                className="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white"
+              >
+                <div className="relative aspect-[16/10] bg-slate-100">
+                  <Image
+                    src={cabang.image}
+                    alt={cabang.nama}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 380px"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+                  <span
+                    className={cn(
+                      montserrat.className,
+                      "absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                      cabang.tipe === "ikhwan" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"
+                    )}
+                  >
+                    Santri {cabang.tipe === "ikhwan" ? "Ikhwan" : "Akhwat"}
+                  </span>
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <p className={cn(spaceGrotesk.className, "text-xl font-bold leading-tight text-white")}>
+                      {cabang.kota}
+                    </p>
+                    <p className={cn(montserrat.className, "text-xs text-white/80")}>{cabang.provinsi}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
+                  <div className="flex items-center gap-3">
+                    <Phone className="size-4 shrink-0 text-slate-400" aria-hidden />
+                    <span className={cn(spaceGrotesk.className, "flex-1 font-semibold text-slate-900")}>
+                      {formatPhone(cabang.nomor)}
+                    </span>
+                    <CopyButton value={formatPhone(cabang.nomor)} label={`nomor ${cabang.kota}`} />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="size-4 shrink-0 text-slate-400" aria-hidden />
+                    <Link
+                      href={`mailto:${cabang.email}`}
+                      className={cn(montserrat.className, "truncate text-sm text-slate-600 hover:text-blue-600")}
+                    >
+                      {cabang.email}
+                    </Link>
+                  </div>
+
+                  <div className="mt-auto flex gap-2 pt-2">
+                    <Link
+                      href={`https://wa.me/${toWa(cabang.nomor)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        montserrat.className,
+                        "inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-green-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-600"
+                      )}
+                    >
+                      <MessageCircle className="size-4" aria-hidden />
+                      Chat WhatsApp
+                    </Link>
+                    <Link
+                      href={cabang.mapsLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Buka lokasi ${cabang.kota} di Google Maps`}
+                      className="grid size-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 transition-colors hover:border-blue-300 hover:text-blue-600"
+                    >
+                      <MapPin className="size-4" aria-hidden />
+                    </Link>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* KIRIM PESAN + MEDIA SOSIAL */}
+      <section className="bg-white px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeading
+            title="Kirim Pesan"
+            subtitle="Isi formulir singkat ini — pesan Anda akan langsung terkirim ke WhatsApp admin kampus yang dipilih."
+          />
+
+          <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
+            <motion.form
+              {...fadeUp}
+              transition={{ duration: 0.6 }}
+              onSubmit={handleSubmit}
+              className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-7"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="contact-name" className={labelClass}>
+                    Nama
+                  </label>
+                  <input
+                    id="contact-name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Nama lengkap"
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-cabang" className={labelClass}>
+                    Kampus tujuan
+                  </label>
+                  <select
+                    id="contact-cabang"
+                    value={cabangId}
+                    onChange={(e) => setCabangId(e.target.value)}
+                    className={inputClass}
+                  >
+                    {cabangData.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.kota} ({c.tipe === "ikhwan" ? "Ikhwan" : "Akhwat"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <fieldset className="mt-4">
+                <legend className={labelClass}>Keperluan</legend>
+                <div className="flex flex-wrap gap-2">
+                  {topics.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setTopic(t)}
+                      aria-pressed={topic === t}
+                      className={cn(
+                        montserrat.className,
+                        "rounded-full border px-4 py-2 text-xs font-semibold transition-colors sm:text-sm",
+                        topic === t
+                          ? "border-blue-600 bg-blue-600 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-blue-300"
+                      )}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="mt-4">
+                <label htmlFor="contact-message" className={labelClass}>
+                  Pesan
+                </label>
+                <textarea
+                  id="contact-message"
+                  required
+                  rows={5}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Tulis pertanyaan Anda di sini…"
+                  className={cn(inputClass, "resize-none")}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={cn(
+                  montserrat.className,
+                  "mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:w-auto"
+                )}
+              >
+                <Send className="size-4" aria-hidden />
+                Kirim via WhatsApp
+              </button>
+            </motion.form>
+
+            <div className="flex flex-col gap-5">
+              <motion.div
+                {...fadeUp}
+                transition={{ duration: 0.6, delay: 0.08 }}
+                className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6"
+              >
+                <p className={cn(spaceGrotesk.className, "text-lg font-bold text-slate-900")}>
+                  Ikuti Media Sosial Kami
+                </p>
+                <p className={cn(montserrat.className, "mt-1 text-sm text-slate-600")}>
+                  Update kegiatan dan cerita santri setiap hari.
+                </p>
+                <div className="mt-4 flex flex-col gap-2">
+                  {socialLinks.map((social) => {
+                    const Icon = social.icon;
+                    return (
+                      <Link
+                        key={social.name}
+                        href={social.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-3 rounded-2xl border border-slate-100 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/40"
+                      >
+                        <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", social.accent)}>
+                          <Icon className="size-5" aria-hidden />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className={cn(spaceGrotesk.className, "text-sm font-semibold text-slate-900")}>
+                            {social.name}
+                          </p>
+                          <p className={cn(montserrat.className, "truncate text-xs text-slate-500")}>
+                            {social.username}
+                          </p>
+                        </div>
+                        <ArrowUpRight
+                          className="size-4 text-slate-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-600"
+                          aria-hidden
+                        />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              <motion.div
+                {...fadeUp}
+                transition={{ duration: 0.6, delay: 0.16 }}
+                className="rounded-3xl bg-blue-600 p-5 text-white sm:p-6"
+              >
+                <p className={cn(spaceGrotesk.className, "text-lg font-bold")}>Siap bergabung dengan HSIBS?</p>
+                <p className={cn(montserrat.className, "mt-1 text-sm text-blue-100")}>
+                  Pendaftaran santri baru dilakukan secara online.
+                </p>
                 <Link
-                  href={social.link}
+                  href={PSB_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:shadow-blue-200/30 flex flex-col items-center text-center"
+                  className={cn(
+                    montserrat.className,
+                    "mt-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+                  )}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 text-blue-600">
-                    {social.icon}
-                  </div>
-                  <h3 className={`${raleway.className} font-bold text-lg text-slate-800 mb-2`}>{social.name}</h3>
-                  <p className={`${montserrat.className} text-sm text-slate-600 mb-4`}>{social.username}</p>
-                  <span className="inline-flex items-center gap-1 text-blue-600 font-semibold hover:gap-2 transition-all">
-                    Kunjungi <span>→</span>
-                  </span>
+                  Mulai Pendaftaran
+                  <ArrowUpRight className="size-4" aria-hidden />
                 </Link>
               </motion.div>
-            ))}
-          </motion.div>
+            </div>
+          </div>
         </div>
-      </section>
-
-      {/* CTA SECTION */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-12 sm:p-16 text-white shadow-2xl"
-        >
-          <h2 className={`${raleway.className} font-extrabold text-3xl sm:text-4xl md:text-5xl mb-6`}>
-            Siap Bergabung dengan HSIBS?
-          </h2>
-          <p className={`${montserrat.className} text-lg sm:text-xl mb-8 text-blue-100`}>
-            Daftarkan diri Anda sekarang dan mulai perjalanan menuju generasi unggul yang bertauhid, berakhlak Qurani,
-            dan berdaya saing global.
-          </p>
-          <Link
-            href="https://psb.hsiboardingschool.id/auth/auth-user"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            Mulai Pendaftaran
-            <span>→</span>
-          </Link>
-        </motion.div>
       </section>
     </div>
   );
