@@ -13,6 +13,7 @@ export const navLinks: NavItem[] = [
   { title: "Program", href: "/programs" },
   { title: "Galeri", href: "/gallery" },
   { title: "Lokasi", href: "/location" },
+  { title: "Blog", href: "/blog" },
 ];
 
 /** Call-to-action utama di ujung kanan navbar. */
