@@ -5,11 +5,11 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { montserrat, spaceGrotesk } from "@/lib/fonts";
-import type { BlogPost } from "@/lib/blog-data";
+import type { BlogPostSummary } from "@/lib/blog";
 import { PostCard } from "@/components/Blog/post-card";
 
 type Props = {
-  posts: BlogPost[];
+  posts: BlogPostSummary[];
   title?: string;
   subtitle?: string;
 };

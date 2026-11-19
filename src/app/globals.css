@@ -226,3 +226,56 @@
 .maplibregl-popup-tip {
   display: none;
 }
+
+/* Isi artikel blog dari CMS (HTML editor). */
+.blog-content {
+  @apply text-base leading-relaxed text-slate-700 sm:text-lg;
+}
+
+.blog-content > * + * {
+  @apply mt-5;
+}
+
+.blog-content h2 {
+  @apply mt-10 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl;
+}
+
+.blog-content h3 {
+  @apply mt-8 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl;
+}
+
+.blog-content a {
+  @apply font-medium text-blue-600 underline underline-offset-2 hover:text-blue-700;
+}
+
+.blog-content ul {
+  @apply list-disc space-y-2 pl-6;
+}
+
+.blog-content ol {
+  @apply list-decimal space-y-2 pl-6;
+}
+
+.blog-content strong {
+  @apply font-semibold text-slate-900;
+}
+
+.blog-content blockquote {
+  @apply border-l-4 border-blue-200 bg-blue-50/50 py-2 pl-4 italic text-slate-600;
+}
+
+.blog-content img {
+  @apply my-6 h-auto w-full rounded-2xl;
+}
+
+.blog-content code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 text-[0.9em] text-slate-800;
+}
+
+.blog-content pre {
+  @apply overflow-x-auto rounded-2xl bg-slate-900 p-4 text-sm text-slate-100;
+}
+
+.blog-content pre code {
+  @apply bg-transparent p-0 text-inherit;
+}

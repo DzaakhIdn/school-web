@@ -1,31 +1,49 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, Clock, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { montserrat, spaceGrotesk } from "@/lib/fonts";
-import { formatPostDate, getAllPosts, getPostBySlug } from "@/lib/blog-data";
+import { formatPostDate } from "@/lib/blog";
+import { getAllPostSummaries, getPostBySlug } from "@/lib/blog-data";
+import { PostCover } from "@/components/Blog/post-cover";
 import RelatedCarousel from "@/components/Blog/related-carousel";
 
-export function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
-}
+export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  return post ? { title: `${post.title} | Blog HSIBS`, description: post.excerpt } : {};
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
+
+  const title = post.metaTitle || post.title;
+  const description = post.metaDescription || post.excerpt;
+
+  return {
+    title: `${title} | Blog HSIBS`,
+    description,
+    keywords: post.metaKeywords.length ? post.metaKeywords : post.tags,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      publishedTime: post.publishedAt,
+      images: post.cover ? [post.cover] : undefined,
+    },
+  };
 }
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const related = getAllPosts()
+  const allPosts = await getAllPostSummaries();
+  const related = allPosts
     .filter((p) => p.slug !== post.slug && p.category === post.category)
-    .concat(getAllPosts().filter((p) => p.slug !== post.slug && p.category !== post.category))
+    .concat(allPosts.filter((p) => p.slug !== post.slug && p.category !== post.category))
     .slice(0, 8);
 
   return (
@@ -78,26 +96,44 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         </div>
 
         <div className="relative mx-auto mt-8 aspect-[16/9] max-w-5xl overflow-hidden rounded-3xl bg-slate-100">
-          <Image src={post.cover} alt={post.title} fill priority sizes="(max-width: 1024px) 100vw, 1024px" className="object-cover" />
+          <PostCover
+            src={post.cover}
+            alt={post.title}
+            priority
+            sizes="(max-width: 1024px) 100vw, 1024px"
+          />
         </div>
 
-        <div className={cn(montserrat.className, "mx-auto mt-10 max-w-3xl space-y-5 text-base leading-relaxed text-slate-700 sm:text-lg")}>
-          <p className="text-lg font-medium text-slate-900 sm:text-xl">{post.excerpt}</p>
-          {post.content.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
+        <div className="mx-auto mt-10 max-w-3xl">
+          <p
+            className={cn(
+              montserrat.className,
+              "text-lg font-medium leading-relaxed text-slate-900 sm:text-xl"
+            )}
+          >
+            {post.excerpt}
+          </p>
+
+          {post.content && (
+            <div
+              className={cn(montserrat.className, "blog-content mt-6")}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          )}
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-3xl flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className={cn(montserrat.className, "rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-500")}
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+        {post.tags.length > 0 && (
+          <div className="mx-auto mt-8 flex max-w-3xl flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <span
+                key={tag}
+                className={cn(montserrat.className, "rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-500")}
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
       </article>
 
       <RelatedCarousel posts={related} />

@@ -1,20 +1,19 @@
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Clock } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { montserrat, spaceGrotesk } from "@/lib/fonts";
-import { formatPostDate, type BlogPost } from "@/lib/blog-data";
+import { formatPostDate, type BlogPostSummary } from "@/lib/blog";
+import { PostCover } from "@/components/Blog/post-cover";
 
-export const PostCard = ({ post }: { post: BlogPost }) => (
+export const PostCard = ({ post }: { post: BlogPostSummary }) => (
   <article className="group flex h-full flex-col rounded-2xl bg-white p-2 shadow-sm ring-1 ring-slate-100 transition-shadow duration-300 hover:shadow-xl hover:shadow-slate-900/5">
     <Link href={`/blog/${post.slug}`} className="relative block aspect-[16/10] overflow-hidden rounded-xl bg-slate-100">
-      <Image
+      <PostCover
         src={post.cover}
         alt={post.title}
-        fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        className="transition-transform duration-700 ease-out group-hover:scale-105"
       />
     </Link>
 
